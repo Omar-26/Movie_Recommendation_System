@@ -1,0 +1,26 @@
+The Conjuring,TC379
+Horror,Thriller
+
+Interstellar,I123
+Horror,Thriller
+
+The Dark Knight,TDK583
+Horror,Thriller
+
+Spider Man,SP123
+Sci-Fi,Drama
+
+Avatar,A12
+Sci-Fi,Drama
+
+Spider Man,SM112
+Sci-Fi,Drama
+
+Avatar,A12A
+Sci-Fi,Drama
+
+Harry Potter,HP379
+Sci-Fi,Drama
+
+Spider Man,SMX123
+Sci-Fi,Drama
