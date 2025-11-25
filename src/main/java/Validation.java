@@ -104,7 +104,7 @@ public class Validation {
         System.out.println(Objects.requireNonNullElse(error, "\u001B[1;32mValid ID ✔\u001B[0m"));
     }
     
-    public static void validateUser(User user, Set<String> existingIds) {
+    public static String validateUser(User user, Set<String> existingIds) {
         // User Name Validation
         String error = Validation.validateUserName(user.name());
         System.out.println(Objects.requireNonNullElse(error, "\u001B[1;32mValid Name ✔\u001B[0m"));
@@ -112,5 +112,6 @@ public class Validation {
         // User ID Validation
         error = Validation.validateUserId(user.id(), existingIds);
         System.out.println(Objects.requireNonNullElse(error, "\u001B[1;32mValid ID ✔\u001B[0m"));
+        return error;
     }
 }
