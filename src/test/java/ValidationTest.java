@@ -70,94 +70,118 @@ public class ValidationTest {
 
     //------- User Name Validation Test Cases -------//
 
+
     @Test
-    void TestcaseValidUserName() {
+    void Testcase1ValidUserName() {
         User user = new User("John Smith", "12345678A", null);
         String result = Validation.validateUserNameHelper(user,existingIds);
         Assertions.assertNull(result);
     }
 
     @Test
-    void TestcaseNullUserName() {
+    void Testcase2NullUserName() {
         User user = new User(null, "12345678A", null);
         String result = Validation.validateUserNameHelper(user,existingIds);
         assertNotNull(result);
     }
 
     @Test
-    void TestcaseEmptyUserName() {
+    void Testcase3EmptyUserName() {
         User user = new User("", "12345678A", null);
         String result = Validation.validateUserNameHelper(user,existingIds);
         assertNotNull(result);
     }
 
     @Test
-    void TestcaseUserNameStartingWithSpace() {
+    void Testcase4UserNameStartingWithSpace() {
         User user = new User(" John", "12345678A", null);
         String result = Validation.validateUserNameHelper(user,existingIds);
         assertNotNull(result);
     }
 
     @Test
-    void TestcaseUserNameStartingWithMultipleSpaces() {
+    void Testcase5UserNameStartingWithMultipleSpaces() {
         User user = new User("    John", "12345678A", null);
         String result = Validation.validateUserNameHelper(user,existingIds);
         assertNotNull(result);
     }
 
     @Test
-    void TestcaseUserNameWithNumbers() {
+    void Testcase6UserNameWithLettersAndNumbers() {
         User user = new User("John123", "12345678A", null);
         String result = Validation.validateUserNameHelper(user,existingIds);
         assertNotNull(result);
     }
 
     @Test
-    void TestcaseUserNameWithSpecialChars() {
+    void Testcase7User7ameWithLettersAndSpecialChars() {
         User user = new User("John_Smith", "12345678A", null);
         String result = Validation.validateUserNameHelper(user,existingIds);
         assertNotNull(result);
     }
 
     @Test
-    void TestcaseUserNameWithNumbersAndSpecialChars() {
+    void Testcase8UserNameWithLettersNumbersAndSpecialChars() {
         User user = new User("John@132#Smith", "12345678A", null);
         String result = Validation.validateUserNameHelper(user,existingIds);
         assertNotNull(result);
     }
 
+
     @Test
-    void TestcaseUserNameWithMultipleSpacesInside() {
+    void Testcase9UserNameWithNumbersOnly() {
+        User user = new User("123", "12345678A", null);
+        String result = Validation.validateUserNameHelper(user,existingIds);
+        assertNotNull(result);
+    }
+
+    @Test
+    void Testcase10UserNameWithSpecialCharsOnly() {
+        User user = new User("@#$", "12345678A", null);
+        String result = Validation.validateUserNameHelper(user,existingIds);
+        assertNotNull(result);
+    }
+
+    @Test
+    void Testcase11UserNameWithNumbersAndSpecialChars() {
+        User user = new User("1@2#3$", "12345678A", null);
+        String result = Validation.validateUserNameHelper(user,existingIds);
+        assertNotNull(result);
+    }
+
+    @Test
+    void Testcase12UserNameWithMultipleSpacesInside() {
         User user = new User("John   Smith", "12345678A", null);
         String result = Validation.validateUserNameHelper(user,existingIds);
         Assertions.assertNull(result);
     }
 
     @Test
-    void TestcaseUserNameEndingWithMultipleSpaces() {
+    void Testcase13UserNameEndingWithMultipleSpaces() {
         User user = new User("John    ", "12345678A", null);
         String result = Validation.validateUserNameHelper(user,existingIds);
         Assertions.assertNull(result);
     }
 
     @Test
-    void TestcaseLowerCaseUserName() {
+    void Testcase14LowerCaseUserName() {
         User user = new User("johnsmith", "12345678A", null);
         String result = Validation.validateUserNameHelper(user,existingIds);
         Assertions.assertNull(result);
     }
 
     @Test
-    void TestcaseUpperCaseUserName() {
+    void Testcase15UpperCaseUserName() {
         User user = new User("JOHNSMITH", "12345678A", null);
         String result = Validation.validateUserNameHelper(user,existingIds);
         Assertions.assertNull(result);
     }
 
     @Test
-    void TestcaseUpperAndLowerCaseUserName() {
+    void Testcase16UpperAndLowerCaseUserName() {
         User user = new User("JoHnSmItH", "12345678A", null);
         String result = Validation.validateUserNameHelper(user,existingIds);
         Assertions.assertNull(result);
     }
+
 }
