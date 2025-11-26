@@ -1,4 +1,5 @@
 import model.User;
+import model.Movie;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeEach;
@@ -183,5 +184,156 @@ public class ValidationTest {
         String result = Validation.validateUserNameHelper(user,existingIds);
         Assertions.assertNull(result);
     }
+    
+    //------- Movie Title Validation Test Cases -------//
+    
+    @Test
+    void testValidSingleWordTitle() {
+        Movie movie = new Movie("Inception", "123", new String[]{"Action"});
+        String result = Validation.validateMovieTitle(movie);
+        Assertions.assertNull(result, "Title starting with uppercase should be valid");
+    }
 
+    @Test
+    void testValidMultiWordTitle() {
+        Movie movie = new Movie("The Dark Knight", "123", new String[]{"Action"});
+        String result = Validation.validateMovieTitle(movie);
+        Assertions.assertNull(result, "All words starting with uppercase should be valid");
+    }
+
+    @Test
+    void testNullTitle() {
+        Movie movie = new Movie(null, "123", new String[]{"Action"});
+        String result = Validation.validateMovieTitle(movie);
+        assertNotNull(result);
+    }
+
+    @Test
+    void testEmptyTitle() {
+        Movie movie = new Movie("", "123", new String[]{"Action"});
+        String result = Validation.validateMovieTitle(movie);  
+        assertNotNull(result);
+    }
+
+    @Test
+    void testLowercaseStart() {
+        Movie movie = new Movie("matrix", "123", new String[]{"Action"});
+        String result = Validation.validateMovieTitle(movie);
+        assertNotNull(result);
+    }
+
+    @Test
+    void testMixedCaseFailure() {
+        Movie movie = new Movie("Harry potter", "123", new String[]{"Action"});
+        String result = Validation.validateMovieTitle(movie);
+        assertNotNull(result);
+    }
+
+    @Test
+    void testNumericStart() {
+        Movie movie = new Movie("1917", "123", new String[]{"Action"});
+        String result = Validation.validateMovieTitle(movie);
+        assertNotNull(result);
+    }
+
+    @Test
+    void testSymbolStart() {
+        Movie movie = new Movie("$money", "123", new String[]{"Action"});
+        String result = Validation.validateMovieTitle(movie);
+        assertNotNull(result);
+    }
+    
+    @Test
+    void testTrailingWhitespace() {
+        Movie movie = new Movie("Inception ", "123", new String[]{"Action"});
+        String result = Validation.validateMovieTitle(movie);
+        Assertions.assertNull(result, "Trailing whitespace should be ignored");
+    }
+
+    @Test
+    void testMultipleInternalSpaces() {
+        Movie movie = new Movie("The   Dark   Knight", "123", new String[]{"Action"});
+        String result = Validation.validateMovieTitle(movie);
+        Assertions.assertNull(result, "Multiple spaces between words should be handled safely");
+    }
+
+    @Test
+    void testHyphenatedWordValid() {
+        Movie movie = new Movie("X-Men", "123", new String[]{"Action"});
+        String result = Validation.validateMovieTitle(movie);
+        Assertions.assertNull(result, "Hyphenated words starting with uppercase should be valid");
+    }
+
+    @Test
+    void testHyphenatedWordInvalid() {
+        Movie movie = new Movie("x-Men", "123", new String[]{"Action"});
+        String result = Validation.validateMovieTitle(movie);
+        
+        assertNotNull(result, "Hyphenated words starting with lowercase should fail");
+    }
+
+    @Test
+    void testSeparatedHyphenFailure() {
+        Movie movie = new Movie("Spider - Man", "123", new String[]{"Action"});
+        String result = Validation.validateMovieTitle(movie);
+        Assertions.assertNull(result, "A standalone hyphen is not an uppercase letter");
+    }
+
+    @Test
+    void testApostropheValid() {
+        // "Schindler's List". "Schindler's" starts with 'S'.
+        // Result: Valid (null).
+        Movie movie = new Movie("Schindler's List", "123", new String[]{"Action"});
+        String result = Validation.validateMovieTitle(movie);
+        
+        Assertions.assertNull(result, "Words containing apostrophes are valid if they start with uppercase");
+    }
+
+    @Test
+    void testApostropheStartFailure() {
+        // "'Tis Pity". Starts with ' (Apostrophe/Single Quote).
+        // Result: Invalid (Error string).
+        Movie movie = new Movie("'Tis Pity", "123", new String[]{"Action"});
+        String result = Validation.validateMovieTitle(movie);
+        
+        Assertions.assertNotNull(result, "Starting with an apostrophe should fail");
+    }
+
+    @Test
+    void testParenthesisFailure() {
+        // "(500) Days". Starts with '('.
+        // Result: Invalid (Error string).
+        Movie movie = new Movie("(500) Days Of Summer", "123", new String[]{"Action"});
+        String result = Validation.validateMovieTitle(movie);
+        
+        Assertions.assertNotNull(result, "Starting with parenthesis should fail");
+    }
+    
+    @Test
+    void testSingleCharacterTitleValid() {
+        // "A". Uppercase. Result: Valid (null).
+        Movie movie = new Movie("A", "123", new String[]{"Action"});
+        String result = Validation.validateMovieTitle(movie);
+        
+        Assertions.assertNull(result, "Single uppercase letter title is valid");
+    }
+
+    @Test
+    void testSingleCharacterTitleInvalid() {
+        // "a". Lowercase. Result: Invalid (Error string).
+        Movie movie = new Movie("a", "123", new String[]{"Action"});
+        String result = Validation.validateMovieTitle(movie);
+        
+        Assertions.assertNotNull(result, "Single lowercase letter title is invalid");
+    }
+
+    @Test
+    void testUnicodeUppercase() {
+        // "Ève". 'È' is considered Uppercase in Java.
+        // Result: Valid (null).
+        Movie movie = new Movie("Ève", "123", new String[]{"Action"});
+        String result = Validation.validateMovieTitle(movie);
+        
+        Assertions.assertNull(result, "Accented uppercase characters should be valid");
+    }
 }
