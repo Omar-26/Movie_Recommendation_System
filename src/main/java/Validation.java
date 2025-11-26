@@ -103,15 +103,23 @@ public class Validation {
         error = Validation.validateMovieId(movie.title(), movie.id());
         System.out.println(Objects.requireNonNullElse(error, "\u001B[1;32mValid ID ✔\u001B[0m"));
     }
-    
+
     public static String validateUser(User user, Set<String> existingIds) {
+        // User Name Validation
+        //String error = Validation.validateUserName(user.name());
+        //System.out.println(Objects.requireNonNullElse(error, "\u001B[1;32mValid Name ✔\u001B[0m"));
+
+        // User ID Validation
+        String error = Validation.validateUserId(user.id(), existingIds);
+        System.out.println(Objects.requireNonNullElse(error, "\u001B[1;32mValid ID ✔\u001B[0m"));
+        return error;
+    }
+
+    public static String validateUserNameHelper(User user, Set<String> existingIds) {
         // User Name Validation
         String error = Validation.validateUserName(user.name());
         System.out.println(Objects.requireNonNullElse(error, "\u001B[1;32mValid Name ✔\u001B[0m"));
-        
-        // User ID Validation
-        error = Validation.validateUserId(user.id(), existingIds);
-        System.out.println(Objects.requireNonNullElse(error, "\u001B[1;32mValid ID ✔\u001B[0m"));
+
         return error;
     }
 }

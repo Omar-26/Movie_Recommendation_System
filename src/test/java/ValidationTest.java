@@ -1,4 +1,5 @@
 import model.User;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeEach;
 import java.util.HashSet;
@@ -10,6 +11,8 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 public class ValidationTest {
     private Set<String> existingIds;
+
+    //------- User ID Validation Test Cases -------//
 
     @BeforeEach
     void setUp() {
@@ -63,5 +66,98 @@ public class ValidationTest {
         User user = new User("John","12345678A",null);
         String result = Validation.validateUser(user,existingIds);
         assertNull(result);
+    }
+
+    //------- User Name Validation Test Cases -------//
+
+    @Test
+    void TestcaseValidUserName() {
+        User user = new User("John Smith", "12345678A", null);
+        String result = Validation.validateUserNameHelper(user,existingIds);
+        Assertions.assertNull(result);
+    }
+
+    @Test
+    void TestcaseNullUserName() {
+        User user = new User(null, "12345678A", null);
+        String result = Validation.validateUserNameHelper(user,existingIds);
+        assertNotNull(result);
+    }
+
+    @Test
+    void TestcaseEmptyUserName() {
+        User user = new User("", "12345678A", null);
+        String result = Validation.validateUserNameHelper(user,existingIds);
+        assertNotNull(result);
+    }
+
+    @Test
+    void TestcaseUserNameStartingWithSpace() {
+        User user = new User(" John", "12345678A", null);
+        String result = Validation.validateUserNameHelper(user,existingIds);
+        assertNotNull(result);
+    }
+
+    @Test
+    void TestcaseUserNameStartingWithMultipleSpaces() {
+        User user = new User("    John", "12345678A", null);
+        String result = Validation.validateUserNameHelper(user,existingIds);
+        assertNotNull(result);
+    }
+
+    @Test
+    void TestcaseUserNameWithNumbers() {
+        User user = new User("John123", "12345678A", null);
+        String result = Validation.validateUserNameHelper(user,existingIds);
+        assertNotNull(result);
+    }
+
+    @Test
+    void TestcaseUserNameWithSpecialChars() {
+        User user = new User("John_Smith", "12345678A", null);
+        String result = Validation.validateUserNameHelper(user,existingIds);
+        assertNotNull(result);
+    }
+
+    @Test
+    void TestcaseUserNameWithNumbersAndSpecialChars() {
+        User user = new User("John@132#Smith", "12345678A", null);
+        String result = Validation.validateUserNameHelper(user,existingIds);
+        assertNotNull(result);
+    }
+
+    @Test
+    void TestcaseUserNameWithMultipleSpacesInside() {
+        User user = new User("John   Smith", "12345678A", null);
+        String result = Validation.validateUserNameHelper(user,existingIds);
+        Assertions.assertNull(result);
+    }
+
+    @Test
+    void TestcaseUserNameEndingWithMultipleSpaces() {
+        User user = new User("John    ", "12345678A", null);
+        String result = Validation.validateUserNameHelper(user,existingIds);
+        Assertions.assertNull(result);
+    }
+
+    @Test
+    void TestcaseLowerCaseUserName() {
+        User user = new User("johnsmith", "12345678A", null);
+        String result = Validation.validateUserNameHelper(user,existingIds);
+        Assertions.assertNull(result);
+    }
+
+    @Test
+    void TestcaseUpperCaseUserName() {
+        User user = new User("JOHNSMITH", "12345678A", null);
+        String result = Validation.validateUserNameHelper(user,existingIds);
+        Assertions.assertNull(result);
+    }
+
+    @Test
+    void TestcaseUpperAndLowerCaseUserName() {
+        User user = new User("JoHnSmItH", "12345678A", null);
+        String result = Validation.validateUserNameHelper(user,existingIds);
+        Assertions.assertNull(result);
     }
 }
