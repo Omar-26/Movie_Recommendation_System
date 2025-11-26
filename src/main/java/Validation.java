@@ -92,18 +92,20 @@ public class Validation {
     
     //------- Helper Methods -------//
     
-    public static void validateMovie(Movie movie) {
+    public static String validateMovieTitle(Movie movie) {
         // Movie Title Validation
         String error = validateMovieTitle(movie.title());
         
-        //TODO if condition with return
         System.out.println(Objects.requireNonNullElse(error, "\u001B[1;32mValid Title ✔\u001B[0m"));
-        
-        // Movie ID Validation
-        error = Validation.validateMovieId(movie.title(), movie.id());
-        System.out.println(Objects.requireNonNullElse(error, "\u001B[1;32mValid ID ✔\u001B[0m"));
+        return error;
     }
 
+    public static void validateMovie(Movie movie) {
+        // Movie ID Validation
+        String error = Validation.validateMovieId(movie.title(), movie.id());
+        System.out.println(Objects.requireNonNullElse(error, "\u001B[1;32mValid ID ✔\u001B[0m"));
+    }
+    
     public static String validateUser(User user, Set<String> existingIds) {
         // User Name Validation
         //String error = Validation.validateUserName(user.name());
