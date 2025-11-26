@@ -33,6 +33,7 @@ public class Main {
             System.out.println("Movie Title: " + m.title());
             System.out.println("Movie ID: " + m.id());
             
+            Validation.validateMovieTitle(m);
             Validation.validateMovie(m);
             
             System.out.println("-----------------------------------");
