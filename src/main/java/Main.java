@@ -18,6 +18,8 @@ public class Main {
         List<User> users = List.of();
         Set<String> existingUserIds = new java.util.HashSet<>(Set.of());
         
+        //-------- Movies Processing --------//
+        
         // Movies Parsing
         try {
             movies = movieParser.readMovies("src/main/resources/movies.txt");
@@ -34,10 +36,12 @@ public class Main {
             System.out.println("Movie ID: " + m.id());
             
             Validation.validateMovieTitle(m);
-            Validation.validateMovie(m);
+            Validation.validateMovieId(m);
             
             System.out.println("-----------------------------------");
         }
+        
+        //-------- Users Processing --------//
         
         // Users Parsing
         try {
@@ -53,7 +57,8 @@ public class Main {
             System.out.println("User Name: " + u.name());
             System.out.println("User ID: " + u.id());
             
-            Validation.validateUser(u, existingUserIds);
+            Validation.validateUserName(u, existingUserIds);
+            Validation.validateUserId(u, existingUserIds);
             
             existingUserIds.add(u.id());
             
