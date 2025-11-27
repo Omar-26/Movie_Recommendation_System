@@ -5,6 +5,8 @@ import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 public class UserFileParser {
     
@@ -28,19 +30,14 @@ public class UserFileParser {
             String name = nameAndId[0].trim();
             String userId = nameAndId[1].trim();
             
-            String favouriteMoviesLine = br.readLine();
-            //TODO remove as it doesn't make sense to throw an error if user has no favourite movies
-            if (favouriteMoviesLine == null) {
-                throw new Exception("ERROR: Favourite Movies missing for movie: " + name);
-            }
+            String watchedMoviesLine = br.readLine();
             
-            String[] favouriteMovies = Arrays.stream(favouriteMoviesLine.split(","))
+            Set<String> watchedMovies = Arrays.stream(watchedMoviesLine.split(","))
                     .map(String::trim)
-                    .toArray(String[]::new);
+                    .collect(Collectors.toSet());
             
-            users.add(new User(name, userId, favouriteMovies));
+            users.add(new User(name, userId, watchedMovies));
         }
-        
         br.close();
         return users;
     }

@@ -48,45 +48,20 @@ public class Main {
             System.out.println(e.getMessage());
         }
         
-        Path outPath = Path.of("recommendations.txt");
-        try (BufferedWriter writer = Files.newBufferedWriter(outPath,
-                StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING)) {
+        // Users Validation
+        for (User u : users) {
+            System.out.println("User Name: " + u.name());
+            System.out.println("User ID: " + u.id());
             
-            // Users Validation
-            for (User u : users) {
-                System.out.println("User Name: " + u.name());
-                System.out.println("User ID: " + u.id());
-                
-                Validation.validateUser(u, existingUserIds);
-                
-                existingUserIds.add(u.id());
-                
-                System.out.println("-----------------------------------");
-                
-                Set<String> recommendedMovies = Recommendation.recommendMovies(u.favoriteMovies(), movies);
-                
-                // Write user line then recommendations line
-                writer.write(u.name() + "," + u.id());
-                writer.newLine();
-                
-                String joined = String.join(",", recommendedMovies);
-                writer.write(joined);
-                writer.newLine();
-                
-                // Recommended Movies
-//            //TODO shouldn't get the movies the user has already watched
-//            Set<String> recommendedMovies = Recommendation.recommendMovies(u.favoriteMovies(), movies);
-//            for (String title : recommendedMovies) {
-//                System.out.println("\u001B[1;34mRecommended Movie: " + title + "\u001B[0m");
-//            }
-                
-                //TODO if the user is invalid we shouldn't recommend movies
-                //TODO if the user doesn't have favorite movies we shouldn't add the user to recommendations file
-                //TODO if the user already watched all movies we shouldn't add the user to recommendations file
-            }
+            Validation.validateUser(u, existingUserIds);
             
-        } catch (IOException e) {
-            System.out.println(e.getMessage());
+            existingUserIds.add(u.id());
+            
+            System.out.println("-----------------------------------");
         }
+        
+        // Generate Recommendations File
+        Recommendation.generateRecommendationsFile(users, movies);
+        
     }
 }

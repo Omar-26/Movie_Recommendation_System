@@ -1,4 +1,6 @@
 package model;
 
-public record User(String name, String id, String[] favoriteMovies) {
+import java.util.Set;
+
+public record User(String name, String id, Set<String> watchedMovies) {
 }
