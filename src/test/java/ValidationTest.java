@@ -7,7 +7,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import static org.junit.Assert.assertNull;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 
 public class ValidationTest {
