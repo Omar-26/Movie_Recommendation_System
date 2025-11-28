@@ -13,7 +13,7 @@ public class Validation {
             return "\u001B[31mERROR: Movie Title {" + Title + "} is wrong\u001B[0m";
         }
         
-        String[] words = Title.split("\\s+");
+        String[] words = Title.split("[\\s-]+");
         for (String word : words) {
             if (!Character.isUpperCase(word.charAt(0))) {
                 return "\u001B[31mERROR: Movie Title {" + Title + "} is wrong\u001B[0m";
