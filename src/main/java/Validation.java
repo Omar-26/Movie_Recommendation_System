@@ -94,25 +94,25 @@ public class Validation {
     
     public static String validateMovieTitle(Movie movie) {
         String error = validateMovieTitle(movie.title());
-        System.out.println(Objects.requireNonNullElse(error, "\u001B[1;32mValid Title ✔\u001B[0m"));
+        //System.out.println(Objects.requireNonNullElse(error, "\u001B[1;32mValid Title ✔\u001B[0m"));
         return error;
     }
 
     public static String validateMovieId(Movie movie) {
         String error = Validation.validateMovieId(movie.title(), movie.id());
-        System.out.println(Objects.requireNonNullElse(error, "\u001B[1;32mValid ID ✔\u001B[0m"));
+        //System.out.println(Objects.requireNonNullElse(error, "\u001B[1;32mValid ID ✔\u001B[0m"));
         return error;
     }
     
     public static String validateUserId(User user, Set<String> existingIds) {
         String error = Validation.validateUserId(user.id(), existingIds);
-        System.out.println(Objects.requireNonNullElse(error, "\u001B[1;32mValid ID ✔\u001B[0m"));
+        //System.out.println(Objects.requireNonNullElse(error, "\u001B[1;32mValid ID ✔\u001B[0m"));
         return error;
     }
 
     public static String validateUserName(User user, Set<String> existingIds) {
         String error = Validation.validateUserName(user.name());
-        System.out.println(Objects.requireNonNullElse(error, "\u001B[1;32mValid Name ✔\u001B[0m"));
+        //System.out.println(Objects.requireNonNullElse(error, "\u001B[1;32mValid Name ✔\u001B[0m"));
         return error;
     }
 }

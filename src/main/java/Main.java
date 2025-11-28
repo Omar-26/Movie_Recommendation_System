@@ -26,17 +26,17 @@ public class Main {
         // Movies Parsing
         try {
             movies = movieParser.readMovies("src/main/resources/movies.txt");
-            System.out.println("-----------------------------------");
-            System.out.println("\u001B[1;32mMovies parsed successfully\u001B[0m");
-            System.out.println("-----------------------------------");
+            //System.out.println("-----------------------------------");
+            //System.out.println("\u001B[1;32mMovies parsed successfully\u001B[0m");
+            //System.out.println("-----------------------------------");
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
         
         // Movies Validation
             for (Movie m : movies) {
-                System.out.println("Movie Title: " + m.title());
-                System.out.println("Movie ID: " + m.id());
+                //System.out.println("Movie Title: " + m.title());
+                //System.out.println("Movie ID: " + m.id());
 
                 output = Validation.validateMovieTitle(m);
                 if(output != null){
@@ -51,7 +51,7 @@ public class Main {
                     return;
                 }
 
-                System.out.println("-----------------------------------");
+                //System.out.println("-----------------------------------");
             }
 
         //-------- Users Processing --------//
@@ -59,16 +59,16 @@ public class Main {
         // Users Parsing
         try {
             users = userParser.readUsers("src/main/resources/users.txt");
-            System.out.println("\u001B[1;32mUsers parsed successfully\u001B[0m");
-            System.out.println("-----------------------------------");
+            //System.out.println("\u001B[1;32mUsers parsed successfully\u001B[0m");
+            //System.out.println("-----------------------------------");
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
         
         // Users Validation
         for (User u : users) {
-            System.out.println("User Name: " + u.name());
-            System.out.println("User ID: " + u.id());
+            //System.out.println("User Name: " + u.name());
+            //System.out.println("User ID: " + u.id());
             
             output = Validation.validateUserName(u, existingUserIds);
                 if(output != null){
@@ -85,7 +85,7 @@ public class Main {
             
             existingUserIds.add(u.id());
             
-            System.out.println("-----------------------------------");
+            //System.out.println("-----------------------------------");
         }
         
         // Generate Recommendations File
