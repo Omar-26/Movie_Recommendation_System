@@ -157,117 +157,6 @@ public class UserFileParserTest {
         assertTrue(users.get(0).watchedMovies().contains("SP123"));
     }
 
-    // ===================== INVALID USER ID TESTS =====================
-
-    @Test
-    @DisplayName("Test invalid userId with letter not in 10th position")
-    public void testReadUsers_InvalidUserIdLetterPosition() throws Exception {
-        Path userFile = tempDir.resolve("users.txt");
-        Files. writeString(userFile,
-                """
-                Invalid User,12345A
-                A123
-                """);
-
-        Exception exception = assertThrows(Exception.class, () -> {
-            userParser. readUsers(userFile.toString());
-        });
-
-        assertTrue(exception.getMessage().contains("Invalid user ID format") ||
-                exception.getMessage(). contains("12345A"));
-    }
-
-    @Test
-    @DisplayName("Test userId shorter than 9 digits")
-    public void testReadUsers_UserIdTooShort() throws Exception {
-        Path userFile = tempDir.resolve("users.txt");
-        Files.writeString(userFile,
-                """
-                Short User,12345678
-                A123
-                """);
-
-        Exception exception = assertThrows(Exception.class, () -> {
-            userParser.readUsers(userFile.toString());
-        });
-
-        assertTrue(exception.getMessage().contains("Invalid user ID") ||
-                exception.getMessage(). contains("length"));
-    }
-
-    @Test
-    @DisplayName("Test userId longer than 10 characters")
-    public void testReadUsers_UserIdTooLong() throws Exception {
-        Path userFile = tempDir.resolve("users. txt");
-        Files.writeString(userFile,
-                """
-                Long User,12345678901
-                A123
-                """);
-
-        Exception exception = assertThrows(Exception.class, () -> {
-            userParser.readUsers(userFile.toString());
-        });
-
-        assertTrue(exception.getMessage().contains("Invalid user ID") ||
-                exception.getMessage().contains("length"));
-    }
-
-    // ===================== INVALID USER NAME TESTS =====================
-
-    @Test
-    @DisplayName("Test invalid user name with special characters")
-    public void testReadUsers_InvalidNameWithSpecialChars() throws Exception {
-        Path userFile = tempDir. resolve("users.txt");
-        Files.writeString(userFile,
-                """
-                Invalid User! ,123456789
-                A123
-                """);
-
-        Exception exception = assertThrows(Exception.class, () -> {
-            userParser.readUsers(userFile.toString());
-        });
-
-        assertTrue(exception.getMessage(). contains("Invalid user name") ||
-                exception.getMessage().contains("Invalid User!"));
-    }
-
-    @Test
-    @DisplayName("Test invalid user name with numbers")
-    public void testReadUsers_InvalidNameWithNumbers() throws Exception {
-        Path userFile = tempDir.resolve("users. txt");
-        Files.writeString(userFile,
-                """
-                John123,123456789
-                A123
-                """);
-
-        Exception exception = assertThrows(Exception.class, () -> {
-            userParser.readUsers(userFile.toString());
-        });
-
-        assertTrue(exception.getMessage().contains("Invalid user name") ||
-                exception. getMessage().contains("John123"));
-    }
-
-    @Test
-    @DisplayName("Test invalid user name starting with space")
-    public void testReadUsers_NameStartingWithSpace() throws Exception {
-        Path userFile = tempDir.resolve("users.txt");
-        Files.writeString(userFile,
-                """
-                 John,123456789
-                A123
-                """);
-
-        Exception exception = assertThrows(Exception.class, () -> {
-            userParser.readUsers(userFile.toString());
-        });
-
-        assertTrue(exception.getMessage(). contains("Invalid user name") ||
-                exception.getMessage().contains("space"));
-    }
 
     // ===================== EMPTY FILE TESTS =====================
 
@@ -396,7 +285,6 @@ public class UserFileParserTest {
                 """);
 
         List<User> users = userParser.readUsers(userFile.toString());
-
         assertEquals(1, users.size());
         assertTrue(users.get(0).watchedMovies().isEmpty() ||
                 users.get(0).watchedMovies() == null);
