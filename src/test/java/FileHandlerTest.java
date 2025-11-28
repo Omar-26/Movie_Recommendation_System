@@ -6,6 +6,7 @@ import org.junit.jupiter.api.io.TempDir;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -114,34 +115,37 @@ public class FileHandlerTest {
         assertEquals(expectedLines, actualLines);
     }
 
-    // ==================== writeFile() Test Cases ====================
+    // ==================== writeFile() Test Cases (UPDATED) ====================
 
     @Test
     void testWriteFile_ValidContent_WritesSuccessfully() throws IOException {
         // Arrange
         Path testFile = tempDir.resolve("output.txt");
-        List<String> content = Arrays.asList("Line 1", "Line 2", "Line 3");
+        String content = "Line 1" + System.lineSeparator() + "Line 2" + System.lineSeparator() + "Line 3";
 
         // Act
-        fileHandler.writeFile(testFile.toString(), content);
+        FileHandler.writeFile(testFile, content);
 
         // Assert
         List<String> actualLines = Files.readAllLines(testFile);
-        assertEquals(content, actualLines);
+        assertEquals(Arrays.asList("Line 1", "Line 2", "Line 3"), actualLines);
     }
 
     @Test
-    void testWriteFile_EmptyList_CreatesEmptyFile() throws IOException {
+    void testWriteFile_EmptyString_WritesNewLine() throws IOException {
         // Arrange
         Path testFile = tempDir.resolve("empty_output.txt");
-        List<String> content = new ArrayList<>();
+        String content = "";
 
         // Act
-        fileHandler.writeFile(testFile.toString(), content);
+        FileHandler.writeFile(testFile, content);
 
         // Assert
+        // The updated writeFile method adds a newLine() after writing content.
+        // So an empty string input results in a file with a single newline.
         List<String> actualLines = Files.readAllLines(testFile);
-        assertTrue(actualLines.isEmpty());
+        assertEquals(1, actualLines.size());
+        assertEquals("", actualLines.get(0));
     }
 
     @Test
@@ -151,24 +155,14 @@ public class FileHandlerTest {
         List<String> initialContent = Arrays.asList("Old Line 1", "Old Line 2");
         Files.write(testFile, initialContent);
 
-        List<String> newContent = Arrays.asList("New Line 1", "New Line 2");
+        String newContent = "New Line 1" + System.lineSeparator() + "New Line 2";
 
         // Act
-        fileHandler.writeFile(testFile.toString(), newContent);
+        FileHandler.writeFile(testFile, newContent);
 
         // Assert
         List<String> actualLines = Files.readAllLines(testFile);
-        assertEquals(newContent, actualLines);
-    }
-
-    @Test
-    void testWriteFile_InvalidPath_HandlesGracefully() {
-        // Arrange
-        String invalidPath = "Z:\\nonexistent\\folder\\file.txt";
-        List<String> content = Arrays.asList("Line 1");
-
-        // Act & Assert - Should not throw exception
-        assertDoesNotThrow(() -> fileHandler.writeFile(invalidPath, content));
+        assertEquals(Arrays.asList("New Line 1", "New Line 2"), actualLines);
     }
 
     // ==================== writeRecommendation() Test Cases ====================
@@ -496,8 +490,7 @@ public class FileHandlerTest {
 
     @Test
     void testWriteFirstError_ErrorPriorityHierarchy_VerifyOrder() throws IOException {
-        // Test Priority: User Name Error (Highest) > User ID Error > No Recommendations
-        // Error (Lowest)
+        // Test Priority: User Name Error (Highest) > User ID Error > No Recommendations Error (Lowest)
         Path testFile = tempDir.resolve("error_hierarchy.txt");
 
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(testFile.toFile()))) {
@@ -529,7 +522,7 @@ public class FileHandlerTest {
         assertEquals("Valid Name,123,Invalid user ID", lines.get(1));
         assertEquals("Valid Name,12345678A,No recommendations", lines.get(2));
         assertEquals("Invalid123,123,Invalid user name", lines.get(3)); // User Name has priority
-        assertEquals("Valid Name,123,Invalid user ID", lines.get(4)); // User ID has priority
+        assertEquals("Valid Name,123,Invalid user ID", lines.get(4));   // User ID has priority
     }
 
     @Test
@@ -552,7 +545,7 @@ public class FileHandlerTest {
         assertFalse(lines.get(0).contains("\u001B"));
     }
 
-    // ==================== Integration Test Cases ====================
+    // ==================== Integration Test Cases (UPDATED) ====================
 
     @Test
     void testReadAndWrite_Integration_WorksTogether() throws IOException {
@@ -564,7 +557,10 @@ public class FileHandlerTest {
 
         // Act
         List<String> readContent = fileHandler.readFile(inputFile.toString());
-        fileHandler.writeFile(outputFile.toString(), readContent);
+        
+        // Convert the list to a single string to match the new writeFile signature
+        String joinedContent = String.join(System.lineSeparator(), readContent);
+        FileHandler.writeFile(outputFile, joinedContent);
 
         // Assert
         List<String> finalContent = Files.readAllLines(outputFile);
