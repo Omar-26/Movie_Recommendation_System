@@ -336,4 +336,94 @@ public class ValidationTest {
         
         Assertions.assertNull(result, "Accented uppercase characters should be valid");
     }
+
+     // ------------ VALID MOVIE ID ------------
+
+    @Test
+    public void testValidMovieId() {
+        Movie movie = new Movie("Spider Man", "SM123", new String[0]);
+
+        String error = Validation.validateMovieId(movie);
+
+        assertNull(error); // means valid
+    }
+
+    // ------------ WRONG PREFIX ------------
+    @Test
+    public void testWrongPrefix() {
+        Movie m = new Movie("Spider Man", "SP123",new String[0]);
+
+        String error = Validation.validateMovieId(m);
+        assertNotNull(error);
+        assertTrue(error.contains("ERROR: Movie Id letters SP123 are wrong"));
+    }
+
+
+    // ------------ LOWERCASE PREFIX ------------
+    @Test
+    public void testLowercasePrefix() {
+        Movie m = new Movie("Spider Man", "sm123",new String[0]);
+
+        String error = Validation.validateMovieId(m);
+
+        assertTrue(error.contains("ERROR: Movie Id letters sm123 are wrong"));
+    }
+
+    // ------------ SUFFIX NOT 3 DIGITS ------------
+    @Test
+    public void testSuffixTooShort() {
+        Movie m = new Movie("Spider Man", "SM12",new String[0]);
+
+        String error = Validation.validateMovieId(m);
+
+        assertTrue(error.contains("ERROR: Movie Id letters SM12 are wrong"));
+    }
+
+    @Test
+    public void testSuffixTooLong() {
+        Movie m = new Movie("Spider Man", "SM1234",new String[0]);
+
+        String error = Validation.validateMovieId(m);
+
+        assertTrue(error.contains("ERROR: Movie Id letters SM1234 are wrong"));
+
+    }
+
+    // ------------ NON-DIGIT IN SUFFIX ------------
+    @Test
+    public void testSuffixNonDigit() {
+        Movie m = new Movie("Spider Man", "SM12A",new String[0]);
+
+        String error = Validation.validateMovieId(m);
+
+        assertTrue(error.contains("ERROR: Movie Id letters SM12A are wrong"));
+    }
+
+    // ------------ not unique ------------
+    @Test
+    void testNonUniqueDigits() {
+        Movie m = new Movie("Spider Man", "SM112",new String[0]);
+        String result = Validation.validateMovieId(m);
+
+        assertNotNull(result);
+        assertTrue(result.contains("ERROR: Movie Id numbers SM112 aren't unique"));
+    }
+
+    // --------------not complete prefix ---------------
+    @Test
+    void testNotCompletePrefix(){
+        Movie m = new Movie("Spider Man", "S123",new String[0]);
+        String result = Validation.validateMovieId(m);
+        assertNotNull(result);
+        assertTrue(result.contains("ERROR: Movie Id letters S123 are wrong"));
+    }
+
+    // --------------empty id -----------------
+    @Test
+    void testEmptyId(){
+        Movie m = new Movie("Spider Man", "",new String[0]);
+        String result = Validation.validateMovieId(m);
+        assertNotNull(result);
+        assertTrue(result.contains("ERROR: Movie Id letters  are wrong"));
+    }
 }
