@@ -11,6 +11,9 @@ import java.util.Set;
 
 public class Main {
     public static void main(String[] args) {
+        Path outPath = Path.of("recommendations.txt");
+        String output = "";
+        
         
         MovieFileParser movieParser = new MovieFileParser();
         UserFileParser userParser = new UserFileParser();
@@ -31,16 +34,26 @@ public class Main {
         }
         
         // Movies Validation
-        for (Movie m : movies) {
-            System.out.println("Movie Title: " + m.title());
-            System.out.println("Movie ID: " + m.id());
-            
-            Validation.validateMovieTitle(m);
-            Validation.validateMovieId(m);
-            
-            System.out.println("-----------------------------------");
-        }
-        
+            for (Movie m : movies) {
+                System.out.println("Movie Title: " + m.title());
+                System.out.println("Movie ID: " + m.id());
+
+                output = Validation.validateMovieTitle(m);
+                if(output != null){
+                    output = FileHandler.removeAnsiCodes(output);
+                    FileHandler.writeFile(outPath, output);
+                    return;
+                }
+                output = Validation.validateMovieId(m);
+                if(output != null){
+                    output = FileHandler.removeAnsiCodes(output);
+                    FileHandler.writeFile(outPath, output);
+                    return;
+                }
+
+                System.out.println("-----------------------------------");
+            }
+
         //-------- Users Processing --------//
         
         // Users Parsing
@@ -57,8 +70,18 @@ public class Main {
             System.out.println("User Name: " + u.name());
             System.out.println("User ID: " + u.id());
             
-            Validation.validateUserName(u, existingUserIds);
-            Validation.validateUserId(u, existingUserIds);
+            output = Validation.validateUserName(u, existingUserIds);
+                if(output != null){
+                    output = FileHandler.removeAnsiCodes(output);
+                    FileHandler.writeFile(outPath, output);
+                    return;
+                }
+            output = Validation.validateUserId(u, existingUserIds);
+                if(output != null){
+                    output = FileHandler.removeAnsiCodes(output);
+                    FileHandler.writeFile(outPath, output);
+                    return;
+                }
             
             existingUserIds.add(u.id());
             
@@ -67,6 +90,5 @@ public class Main {
         
         // Generate Recommendations File
         Recommendation.generateRecommendationsFile(users, movies);
-        
     }
 }
