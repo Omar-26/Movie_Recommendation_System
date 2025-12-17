@@ -1,55 +1,78 @@
 import model.Movie;
 import model.User;
 
-import java.util.Objects;
 import java.util.Set;
 
 public class Validation {
-    
+
     //------- Movie Validation Methods -------//
-    
-    private static String validateMovieTitle(String Title) {
-        if (Title == null || Title.isEmpty()) {
-            return "\u001B[31mERROR: Movie Title {" + Title + "} is wrong\u001B[0m";
+
+    private static String validateMovieTitle(String title) {
+        if (title == null || title.isEmpty()) {
+            return "ERROR: Movie Title {" + title + "} is wrong";
         }
-        
-        String[] words = Title.split("\\s+");
+
+        String[] words = title.trim().split("[\\s-]+");
         for (String word : words) {
-            if (!Character.isUpperCase(word.charAt(0))) {
-                return "\u001B[31mERROR: Movie Title {" + Title + "} is wrong\u001B[0m";
+            if (word.isEmpty() || !Character.isUpperCase(word.charAt(0))) {
+                return "ERROR: Movie Title {" + title + "} is wrong";
             }
         }
         return null;
     }
-    
+
+    // -------- FORMAT VALIDATION ONLY --------
     private static String validateMovieId(String title, String movieId) {
-        
+
+        if (movieId == null || movieId.isEmpty()) {
+            return "ERROR: Movie Id letters " + movieId + " are wrong";
+        }
+
         String expectedPrefix = extractCapitalLetters(title);
-        
-        // Rule 1: Prefix must match
+
+        // prefix (letters) validation
         if (!movieId.startsWith(expectedPrefix)) {
-            return "\u001B[31mERROR: Movie Id letters " + movieId + " are wrong\u001B[0m";
+            return "ERROR: Movie Id letters " + movieId + " are wrong";
         }
-        
-        // Remaining part must be exactly 3 digits
+
         String suffix = movieId.substring(expectedPrefix.length());
-        if (suffix.length() != 3 || !suffix.matches("\\d{3}")) {
-            return "\u001B[31mERROR: Movie Id letters " + movieId + " are wrong\u001B[0m";
+
+        // must be exactly 3 digits
+        if (!suffix.matches("\\d{3}")) {
+            return "ERROR: Movie Id letters " + movieId + " are wrong";
         }
-        
-        // Digits must be unique
-        if (suffix.charAt(0) == suffix.charAt(1) ||
-                suffix.charAt(0) == suffix.charAt(2) ||
-                suffix.charAt(1) == suffix.charAt(2)) {
-            return "\u001B[31mERROR: Movie Id numbers " + movieId + " aren't unique\u001B[0m";
-        }
-        
-        // Valid
-        return null;
+
+        return null; // format valid
     }
+
+    // -------- FORMAT + UNIQUENESS --------
+    public static String validateMovieId(Movie movie, Set<String> existingMovieIds) {
+
+        // 1️⃣ check format first
+        String error = validateMovieId(movie.title(), movie.id());
+        if (error != null) {
+            return error;
+        }
+
+        // 2️⃣ check uniqueness of digits across movies
+        String prefix = extractCapitalLetters(movie.title());
+        String currentDigits = movie.id().substring(prefix.length());
+
+        for (String existingId : existingMovieIds) {
+            if (existingId.length() >= 3 &&
+                    existingId.substring(existingId.length() - 3).equals(currentDigits)) {
+
+                return "ERROR: Movie Id numbers " + movie.id() + " aren’t unique";
+            }
+        }
+
+        return null; // fully valid
+    }
+
     private static String extractCapitalLetters(String title) {
         StringBuilder sb = new StringBuilder();
-        
+        if (title == null) return "";
+
         for (char ch : title.toCharArray()) {
             if (Character.isUpperCase(ch)) {
                 sb.append(ch);
@@ -57,62 +80,50 @@ public class Validation {
         }
         return sb.toString();
     }
-    
+
     //------- User Validation Methods -------//
-    
+
     private static String validateUserName(String userName) {
-        // Must not be empty
         if (userName == null || userName.isEmpty())
-            return "\u001B[31mERROR: User Name {" + userName + "} is wrong\u001B[0m";
-        
-        // Must not start with a space
+            return "ERROR: User Name {" + userName + "} is wrong";
+
         if (userName.startsWith(" "))
-            return "\u001B[31mERROR: User Name {" + userName + "} is wrong\u001B[0m";
-        
-        // Alphabetic characters + spaces only
+            return "ERROR: User Name {" + userName + "} is wrong";
+
         if (!userName.matches("[A-Za-z ]+"))
-            return "\u001B[31mERROR: User Name {" + userName + "} is wrong\u001B[0m";
-        
-        // If all validations pass --> return null (no error)
+            return "ERROR: User Name {" + userName + "} is wrong";
+
         return null;
     }
-    
+
     private static String validateUserId(String userId, Set<String> existingIds) {
         if (userId == null || userId.isEmpty())
-            return "\u001B[31mERROR: User ID {" + userId + "} is wrong\u001B[0m";
-        // user id ends by a digit or a number (whether it is 9 or not is enforced in this condition)
+            return "ERROR: User ID {" + userId + "} is wrong";
+
         if (!userId.matches("^(\\d{9}|\\d{8}[A-Za-z])$"))
-            return "\u001B[31mERROR: User ID {" + userId + "} is wrong\u001B[0m";
-        // check uniqueness
+            return "ERROR: User ID {" + userId + "} is wrong";
+
         if (existingIds.contains(userId))
-            return "\u001B[31mERROR: User ID {" + userId + "} is wrong\u001B[0m";
-        // If all validations pass --> return null (no error)
+            return "ERROR: User ID {" + userId + "} is wrong";
+
         return null;
     }
-    
-    //------- Getters -------//
-    
+
+    //------- Public APIs used by Tests -------//
+
     public static String validateMovieTitle(Movie movie) {
-        String error = validateMovieTitle(movie.title());
-        System.out.println(Objects.requireNonNullElse(error, "\u001B[1;32mValid Title ✔\u001B[0m"));
-        return error;
+        return validateMovieTitle(movie.title());
     }
 
     public static String validateMovieId(Movie movie) {
-        String error = Validation.validateMovieId(movie.title(), movie.id());
-        System.out.println(Objects.requireNonNullElse(error, "\u001B[1;32mValid ID ✔\u001B[0m"));
-        return error;
+        return validateMovieId(movie.title(), movie.id());
     }
-    
+
     public static String validateUserId(User user, Set<String> existingIds) {
-        String error = Validation.validateUserId(user.id(), existingIds);
-        System.out.println(Objects.requireNonNullElse(error, "\u001B[1;32mValid ID ✔\u001B[0m"));
-        return error;
+        return validateUserId(user.id(), existingIds);
     }
 
     public static String validateUserName(User user, Set<String> existingIds) {
-        String error = Validation.validateUserName(user.name());
-        System.out.println(Objects.requireNonNullElse(error, "\u001B[1;32mValid Name ✔\u001B[0m"));
-        return error;
+        return validateUserName(user.name());
     }
 }

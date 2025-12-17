@@ -40,7 +40,7 @@ public class UserFileParser {
                 users.add(new User(name, userId, watchedMovies));
             }
         } //br.close();
-        System.out.println(users);
+        //System.out.println(users);
         return users;
     }
 }
