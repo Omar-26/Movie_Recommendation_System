@@ -345,7 +345,7 @@ public class ValidationTest {
 
         String error = Validation.validateMovieId(movie);
 
-        assertNull(error); // means valid
+        assertNull(error); 
     }
 
     // ------------ WRONG PREFIX ------------
@@ -401,12 +401,14 @@ public class ValidationTest {
 
     // ------------ not unique ------------
     @Test
-    void testNonUniqueDigits() {
-        Movie m = new Movie("Spider Man", "SM112",new String[0]);
-        String result = Validation.validateMovieId(m);
+    void testSameDigitsAcrossMovies() {
+        Set<String> existingMovieIds = new HashSet<>();
+        existingMovieIds.add("AB112");
 
-        assertNotNull(result);
-        //assertTrue(result.contains("ERROR: Movie Id numbers SM112 aren't unique"));
+        Movie m = new Movie("Spider Man", "SM112", new String[0]);
+        String result = Validation.validateMovieId(m, existingMovieIds);
+
+        assertNotNull(result); 
     }
 
     // --------------not complete prefix ---------------
