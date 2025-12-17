@@ -157,6 +157,25 @@ public class UserFileParserTest {
         assertTrue(users.get(0).watchedMovies().contains("SP123"));
     }
 
+    @Test
+    @DisplayName("Test reading user name that starts with space")
+    public void testReadUsers_NameStartsWithSpace() throws Exception {
+        Path userFile = tempDir.resolve("users.txt");
+        Files.writeString(userFile,
+                """
+                 John Doe,111111111
+                TC379
+                """);
+
+        List<User> users = userParser. readUsers(userFile.toString());
+
+        assertEquals(1, users. size());
+        assertEquals(" John Doe", users.get(0).name());
+        assertTrue(users.get(0).name().startsWith(" "),
+                "Name should start with a space to allow validation");
+        assertEquals("111111111", users. get(0).id());
+        assertTrue(users.get(0).watchedMovies().contains("TC379"));
+    }
 
     // ===================== EMPTY FILE TESTS =====================
 
