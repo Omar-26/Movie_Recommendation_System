@@ -48,13 +48,13 @@ public class Validation {
     // -------- FORMAT + UNIQUENESS --------
     public static String validateMovieId(Movie movie, Set<String> existingMovieIds) {
 
-        // 1️⃣ check format first
+        //  check format first
         String error = validateMovieId(movie.title(), movie.id());
         if (error != null) {
             return error;
         }
 
-        // 2️⃣ check uniqueness of digits across movies
+        // check uniqueness of digits across movies
         String prefix = extractCapitalLetters(movie.title());
         String currentDigits = movie.id().substring(prefix.length());
 
