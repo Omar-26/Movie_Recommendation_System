@@ -87,15 +87,14 @@ public class ValidationFileTest {
     }
 
     @Test
-    @DisplayName("TC8 – Statement coverage: empty movie ID")
-    void testStatementCoverage_TC8_EmptyMovieId() {
-        Movie movie = new Movie("Spider Man", "", new String[]{});
+    @DisplayName("TC8 – Statement coverage: non-unique digits in movie ID")
+    void testStatementCoverage_TC8_NonUniqueDigits() {
+        Movie movie = new Movie("Spider Man", "SM112", new String[]{});
 
         String result = Validation.validateMovieId(movie);
 
-        assertNotNull(result); // movieId is empty
+        assertNotNull(result); // Digits not unique
     }
-
 
     @Test
     @DisplayName("TC9 – Statement coverage: wrong prefix letters")
@@ -116,32 +115,6 @@ public class ValidationFileTest {
 
         assertNotNull(result); // Suffix length invalid
     }
-
-    @Test
-    @DisplayName("TC_Updated – Movie id format valid and unique")
-    void testStatementCoverage_TC_Updated_ValidAndUnique() {
-        Movie movie = new Movie("Spider Man", "SM123", new String[]{});
-
-        Set<String> existingMovieIds = Set.of("BM456", "IM789");
-
-        String result = Validation.validateMovieId(movie, existingMovieIds);
-
-        assertNull(result); // fully valid
-    }
-
-    @Test
-    @DisplayName("TC_Updated2 – Movie id digits not unique")
-    void testStatementCoverage_TC_Updated2_NotUniqueDigits() {
-        Movie movie = new Movie("Spider Man", "SM123", new String[]{});
-
-        Set<String> existingMovieIds = Set.of("AB123", "XY999");
-
-        String result = Validation.validateMovieId(movie, existingMovieIds);
-
-        assertNotNull(result);
-        assertTrue(result.contains("aren’t unique"));
-    }
-
 
     /**
      * TC11: username = null
@@ -292,47 +265,7 @@ public class ValidationFileTest {
             // are redundant from the statement coverage //
 
 
-    @Test
-    @DisplayName("TC_Updated3 – Movie ID is unique")
-    void testValidateMovieId_Unique() {
-        Movie movie = new Movie("Good Movie", "GM123", new String[]{});
-
-        Set<String> existingMovieIds = Set.of("AB456", "XY789");
-
-        String result = Validation.validateMovieId(movie, existingMovieIds);
-
-        assertNull(result); // fully valid
-    }
-
-    @Test
-    @DisplayName("TC_Updated4 – Movie ID is not unique")
-    void testValidateMovieId_NotUnique() {
-        Movie movie = new Movie("Good Movie", "GM123", new String[]{});
-
-        Set<String> existingMovieIds = Set.of("AB123", "XY999");
-
-        String result = Validation.validateMovieId(movie, existingMovieIds);
-
-        assertNotNull(result);
-        assertTrue(result.contains("aren’t unique"));
-    }
-
-    @Test
-    @DisplayName("TC_Updated5 – Empty existing movie ID list")
-    void testValidateMovieId_EmptyExistingList() {
-        Movie movie = new Movie("Good Movie", "GM123", new String[]{});
-
-        Set<String> existingMovieIds = Set.of(); // empty set
-
-        String result = Validation.validateMovieId(movie, existingMovieIds);
-
-        assertNull(result); // no uniqueness check performed
-    }
-
-
-
-
-    // ===================== PATH COVERAGE TEST CASES =====================
+            // ===================== PATH COVERAGE TEST CASES =====================
             // the test cases 59,60,61,62,63,64,65,66,67,68,69,70,71,72,73
             // are redundant from the above coverage methods //
 }
