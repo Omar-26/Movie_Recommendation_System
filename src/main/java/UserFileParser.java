@@ -1,9 +1,7 @@
-import model.Movie;
-import model. User;
+import model.User;
 
-import java.io. BufferedReader;
-import java. io.FileReader;
-import java.nio.file.Path;
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -24,21 +22,21 @@ public class UserFileParser {
                     continue;
                 }
 
-                String[] nameAndId = line.split(",", 2); // Limit split to 2 parts
-                if (nameAndId.length != 2) {
-                    throw new Exception("ERROR: Wrong user line format: " + line);
+                String[] nameAndId = line.split(",");
+                if (nameAndId. length != 2) {
+                    throw new Exception("ERROR: Wrong user line format:  " + line);
                 }
 
-                // Only trim the userId, preserve spaces in name
-                String name = nameAndId[0]; // DO NOT trim - preserve leading/trailing spaces
+                // Only trim the userId, preserve spaces in name (but not leading/trailing on the whole field)
+                String name = nameAndId[0]; // DO NOT trim - preserve leading spaces
                 String userId = nameAndId[1]. trim();
 
                 String watchedMoviesLine = br.readLine();
 
                 Set<String> watchedMovies = Arrays.stream(watchedMoviesLine.split(","))
-                        .map(String:: trim)
+                        . map(String::trim)
                         .filter(s -> !s.isEmpty())
-                        .collect(Collectors. toSet());
+                        .collect(Collectors.toSet());
 
                 users.add(new User(name, userId, watchedMovies));
             }
@@ -47,5 +45,3 @@ public class UserFileParser {
         return users;
     }
 }
-
-
