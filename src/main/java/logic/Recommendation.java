@@ -1,3 +1,5 @@
+package logic;
+
 import model.Movie;
 import model.User;
 
