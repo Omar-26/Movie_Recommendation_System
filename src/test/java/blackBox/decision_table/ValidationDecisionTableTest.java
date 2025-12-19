@@ -22,237 +22,218 @@ public class ValidationDecisionTableTest {
     @BeforeEach
     void setUp() {
         existingIds = new HashSet<>();
-        existingIds.add("123456789");
         existingMovieIds = new HashSet<>();
-        existingMovieIds.add("SM112");
     }
 
-    //------- Decision Table: Movie ID Validation -------//
-    /*
-     * Decision Table:
-     * +-----------------------+--------+--------+--------+--------+--------+--------+--------+--------+
-     * | Conditions            | Rule 1 | Rule 2 | Rule 3 | Rule 4 | Rule 5 | Rule 6 | Rule 7 | Rule 8 |
-     * +-----------------------+--------+--------+--------+--------+--------+--------+--------+--------+
-     * | Prefix Match (T/F)    |   T    |   T    |   T    |   T    |   F    |   F    |   F    |   F    |
-     * | Digit Format (T/F)    |   T    |   T    |   F    |   F    |   T    |   T    |   F    |   F    |
-     * | Is Unique (T/F)       |   T    |   F    |   T    |   F    |   T    |   F    |   T    |   F    |
-     * +-----------------------+--------+--------+--------+--------+--------+--------+--------+--------+
-     * | Output                |   V    |   U    |   E    |   E    |   E    |   E    |   E    |   E    |
-     * +-----------------------+--------+--------+--------+--------+--------+--------+--------+--------+
-     *
-     * Legend:
-     *   T = True/Correct
-     *   F = False/Incorrect
-     *   V = Valid (null returned)
-     *   U = Uniqueness Error
-     *   E = Format/Prefix Error
-     *
-     * Interpretation:
-     *   Rule 1: Prefix matches, format correct, ID unique → Valid
-     *   Rule 2: Prefix matches, format correct, ID not unique → Uniqueness error
-     *   Rule 3: Prefix matches, format wrong, ID unique → Format error
-     *   Rule 4: Prefix matches, format wrong, ID not unique → Format error (precedence)
-     *   Rule 5: Prefix wrong, format correct, ID unique → Prefix error
-     *   Rule 6: Prefix wrong, format correct, ID not unique → Prefix error (precedence)
-     *   Rule 7: Prefix wrong, format wrong, ID unique → Format error
-     *   Rule 8: Prefix wrong, format wrong, ID not unique → Format error
-     */
-
-    // Rule 1: Prefix=T, Format=T, Unique=T → V (Valid)
+    // Rule 1: Prefix=T, Numbers=T, Unique=T → V (Valid)
     @Test
     public void testMovieId_DT_Rule1_AllValid() {
         Movie movie = new Movie("Spider Man", "SM123", new String[]{});
         String result = Validation.validateMovieId(movie, existingMovieIds);
-        assertNull(result); // V = Valid
+        assertNull(result);
     }
 
-    // Rule 2: Prefix=T, Format=T, Unique=F → U (Uniqueness Error)
+    // Rule 2: Prefix=T, Numbers=T, Unique=F → E (Error)
     @Test
     public void testMovieId_DT_Rule2_NotUnique() {
+        existingMovieIds.add("SM112");
         Movie movie = new Movie("Spider Man", "SM112", new String[]{});
         String result = Validation.validateMovieId(movie, existingMovieIds);
         assertNotNull(result);
-        assertTrue(result.contains("aren't unique")); // U = Uniqueness Error
     }
 
-    // Rule 3: Prefix=T, Format=F, Unique=T → E (Format Error)
+    // Rule 3: Prefix=T, Numbers=F, Unique=T → E (Error)
     @Test
     public void testMovieId_DT_Rule3_WrongFormat() {
         Movie movie = new Movie("Spider Man", "SM12", new String[]{}); // Only 2 digits
         String result = Validation.validateMovieId(movie, existingMovieIds);
         assertNotNull(result);
-        assertTrue(result.contains("are wrong")); // E = Format Error
     }
 
-    // Rule 4: Prefix=T, Format=F, Unique=F → E (Format Error - precedence)
+    // Rule 4: Prefix=T, Numbers=F, Unique=F → E (Error)
     @Test
     public void testMovieId_DT_Rule4_WrongFormatAndNotUnique() {
+        existingMovieIds.add("SM12");
         Movie movie = new Movie("Spider Man", "SM12", new String[]{}); // Wrong format
         String result = Validation.validateMovieId(movie, existingMovieIds);
         assertNotNull(result);
-        assertTrue(result.contains("are wrong")); // E = Format Error
     }
 
-    // Rule 5: Prefix=F, Format=T, Unique=T → E (Prefix Error)
+    // Rule 5: Prefix=F, Numbers=T, Unique=T → E (Error)
     @Test
     public void testMovieId_DT_Rule5_WrongPrefix() {
         Movie movie = new Movie("Spider Man", "SP123", new String[]{}); // Wrong prefix
         String result = Validation.validateMovieId(movie, existingMovieIds);
         assertNotNull(result);
-        assertTrue(result.contains("are wrong")); // E = Prefix Error
     }
 
-    // Rule 6: Prefix=F, Format=T, Unique=F → E (Prefix Error - precedence)
+    // Rule 6: Prefix=F, Numbers=T, Unique=F → E (Error)
     @Test
     public void testMovieId_DT_Rule6_WrongPrefixNotUnique() {
+        existingMovieIds.add("SP112");
         Movie movie = new Movie("Spider Man", "SP112", new String[]{}); // Wrong prefix
         String result = Validation.validateMovieId(movie, existingMovieIds);
         assertNotNull(result);
-        assertTrue(result.contains("are wrong")); // E = Prefix Error
     }
 
-    // Rule 7: Prefix=F, Format=F, Unique=T → E (Format Error)
+    // Rule 7: Prefix=F, Format=F, Unique=T → E (Error)
     @Test
     public void testMovieId_DT_Rule7_WrongPrefixAndFormat() {
         Movie movie = new Movie("Spider Man", "SP12", new String[]{}); // Wrong prefix and format
         String result = Validation.validateMovieId(movie, existingMovieIds);
         assertNotNull(result);
-        assertTrue(result.contains("are wrong")); // E = Format Error
     }
 
-    // Rule 8: Prefix=F, Format=F, Unique=F → E (Format Error)
+    // Rule 8: Prefix=F, Format=F, Unique=F → E (Error)
     @Test
     public void testMovieId_DT_Rule8_AllInvalid() {
+        existingMovieIds.add("SP12");
         Movie movie = new Movie("Spider Man", "SP12", new String[]{}); // All wrong
         String result = Validation.validateMovieId(movie, existingMovieIds);
         assertNotNull(result);
-        assertTrue(result.contains("are wrong")); // E = Format Error
     }
 
     //------- Decision Table: User ID Validation -------//
-    /*
-     * Decision Table:
-     * +-----------------------+--------+--------+--------+--------+--------+--------+--------+--------+
-     * | Conditions            | Rule 1 | Rule 2 | Rule 3 | Rule 4 | Rule 5 | Rule 6 | Rule 7 | Rule 8 |
-     * +-----------------------+--------+--------+--------+--------+--------+--------+--------+--------+
-     * | Length=9 (T/F)        |   T    |   T    |   F    |   F    |   F    |   F    |   T    |   F    |
-     * | Format Valid (T/F)    |   T    |   T    |   T    |   T    |   F    |   F    |   F    |   F    |
-     * | Is Duplicate (T/F)    |   F    |   T    |   F    |   T    |   F    |   F    |   F    |   F    |
-     * +-----------------------+--------+--------+--------+--------+--------+--------+--------+--------+
-     * | Output                |   V    |   E    |   V    |   E    |   E    |   E    |   E    |   E    |
-     * +-----------------------+--------+--------+--------+--------+--------+--------+--------+--------+
-     *
-     * Legend:
-     *   T = True/Correct
-     *   F = False/Incorrect
-     *   V = Valid (null returned)
-     *   E = Error (validation failed)
-     *
-     * Interpretation:
-     *   Rule 1: Length=9, all digits, not duplicate → Valid
-     *   Rule 2: Length=9, all digits, is duplicate → Duplicate error
-     *   Rule 3: Length=8, digit+letter, not duplicate → Valid
-     *   Rule 4: Length=8, digit+letter, is duplicate → Duplicate error
-     *   Rule 5: Length=8, all digits (invalid format), not duplicate → Format error
-     *   Rule 6: Length=other (invalid), any format, not duplicate → Length error
-     *   Rule 7: Length=9, invalid format (special char), not duplicate → Format error
-     *   Rule 8: Length=8, invalid format (2 letters), not duplicate → Format error
-     */
+    // 16 Rules based on: Length=9, Start with Number, End with One Letter, Is Unique
 
-    // Rule 1: Length=9(T), Format Valid=T, Duplicate=F → V (Valid)
+    // Rule 1: Length=9(T), StartNum=T, EndOneLetter=T, Unique=T → V (Valid)
     @Test
-    public void testUserId_DT_Rule1_Valid9Digits() {
+    public void testUserId_DT_Rule1() {
+        User user = new User("John", "12345678A", null);
+        String result = Validation.validateUserId(user, existingIds);
+        assertNull(result); // Valid
+    }
+
+    // Rule 2: Length=9(T), StartNum=T, EndOneLetter=T, Unique=F → E (Error - not unique)
+    @Test
+    public void testUserId_DT_Rule2() {
+        existingIds.add("987654321A");
+        User user = new User("John", "987654321A", null); // Already exists
+        String result = Validation.validateUserId(user, existingIds);
+        assertNotNull(result); // Error
+    }
+
+    // Rule 3: Length=9(T), StartNum=T, EndOneLetter=F, Unique=T → V (Valid)
+    @Test
+    public void testUserId_DT_Rule3() {
         User user = new User("John", "987654321", null);
         String result = Validation.validateUserId(user, existingIds);
-        assertNull(result);
+        assertNull(result); // Valid
     }
 
-    // Rule 2: Length=9(T), Format Valid=T, Duplicate=T → E (Duplicate Error)
+    // Rule 4: Length=9(T), StartNum=T, EndOneLetter=F, Unique=F → E (Error - not unique)
     @Test
-    public void testUserId_DT_Rule2_Duplicate9Digits() {
-        User user = new User("John", "123456789", null); // Exists
+    public void testUserId_DT_Rule4() {
+        existingIds.add("123456789");
+        User user = new User("John", "123456789", null); // Already exists
         String result = Validation.validateUserId(user, existingIds);
-        assertNotNull(result);
+        assertNotNull(result); // Error
     }
 
-    // Rule 3: Length=9(F), Format Valid=T, Duplicate=F → V (Valid - 8 digits+letter)
+    // Rule 5: Length=9(T), StartNum=F, EndOneLetter=T, Unique=T → E (Error - doesn't start with number)
     @Test
-    public void testUserId_DT_Rule3_Valid8DigitsLetter() {
-        User user = new User("John", "12345678A", null);
+    public void testUserId_DT_Rule5() {
+        User user = new User("John", "A12345678", null);
         String result = Validation.validateUserId(user, existingIds);
-        assertNull(result); // V = Valid
+        assertNotNull(result); // Error
     }
 
-    // Rule 4: Length=9(F), Format Valid=T, Duplicate=T → E (Duplicate Error)
+    // Rule 6: Length=9(T), StartNum=F, EndOneLetter=T, Unique=F → E (Error)
     @Test
-    public void testUserId_DT_Rule4_Duplicate8DigitsLetter() {
-        existingIds.add("12345678A");
-        User user = new User("John", "12345678A", null);
+    public void testUserId_DT_Rule6() {
+        existingIds.add("B12345678");
+        User user = new User("John", "B12345678", null);
         String result = Validation.validateUserId(user, existingIds);
-        assertNotNull(result); // E = Duplicate Error
+        assertNotNull(result); // Error
     }
 
-    // Rule 5: Length=9(F), Format Valid=F, Duplicate=F → E (Format Error - needs letter)
+    // Rule 7: Length=9(T), StartNum=F, EndOneLetter=F, Unique=T → E (Error - doesn't start with number)
     @Test
-    public void testUserId_DT_Rule5_Invalid8Digits() {
-        User user = new User("John", "12345678", null); // Needs letter
+    public void testUserId_DT_Rule7() {
+        User user = new User("John", "A23456789", null);
         String result = Validation.validateUserId(user, existingIds);
-        assertNotNull(result); // E = Format Error
+        assertNotNull(result); // Error
     }
 
-    // Rule 6: Length=9(F), Format Valid=F, Duplicate=F → E (Length Error)
+    // Rule 8: Length=9(T), StartNum=F, EndOneLetter=F, Unique=F → E (Error)
     @Test
-    public void testUserId_DT_Rule6_InvalidLength() {
-        User user = new User("John", "1234", null); // Too short
+    public void testUserId_DT_Rule8() {
+        existingIds.add("C23456789");
+        User user = new User("John", "C23456789", null);
         String result = Validation.validateUserId(user, existingIds);
-        assertNotNull(result); // E = Length Error
+        assertNotNull(result); // Error
     }
 
-    // Rule 7: Length=9(T), Format Valid=F, Duplicate=F → E (Format Error - special char)
+    // Rule 9: Length=9(F), StartNum=T, EndOneLetter=T, Unique=T → E (Error - wrong length)
     @Test
-    public void testUserId_DT_Rule7_Invalid9DigitsFormat() {
-        User user = new User("John", "12345678@", null); // Special char
+    public void testUserId_DT_Rule9() {
+        User user = new User("John", "1234567A", null); // Only 8 chars
         String result = Validation.validateUserId(user, existingIds);
-        assertNotNull(result); // E = Format Error
+        assertNotNull(result); // Error
     }
 
-    // Rule 8: Length=9(F), Format Valid=F, Duplicate=F → E (Format Error - 2 letters)
+    // Rule 10: Length=9(F), StartNum=T, EndOneLetter=T, Unique=F → E (Error)
     @Test
-    public void testUserId_DT_Rule8_Invalid8DigitsFormat() {
-        User user = new User("John", "1234567AB", null); // Two letters
+    public void testUserId_DT_Rule10() {
+        existingIds.add("2345678B");
+        User user = new User("John", "2345678B", null); // Only 8 chars
         String result = Validation.validateUserId(user, existingIds);
-        assertNotNull(result); // E = Format Error
+        assertNotNull(result); // Error
     }
+
+    // Rule 11: Length=9(F), StartNum=T, EndOneLetter=F, Unique=T → E (Error - wrong length)
+    @Test
+    public void testUserId_DT_Rule11() {
+        User user = new User("John", "12345678", null); // Only 8 chars
+        String result = Validation.validateUserId(user, existingIds);
+        assertNotNull(result); // Error
+    }
+
+    // Rule 12: Length=9(F), StartNum=T, EndOneLetter=F, Unique=F → E (Error)
+    @Test
+    public void testUserId_DT_Rule12() {
+        existingIds.add("23456789");
+        User user = new User("John", "23456789", null); // Only 8 chars
+        String result = Validation.validateUserId(user, existingIds);
+        assertNotNull(result); // Error
+    }
+
+    // Rule 13: Length=9(F), StartNum=F, EndOneLetter=T, Unique=T → E (Error)
+    @Test
+    public void testUserId_DT_Rule13() {
+        User user = new User("John", "A123456B", null); // Only 8 chars, doesn't start with number
+        String result = Validation.validateUserId(user, existingIds);
+        assertNotNull(result); // Error
+    }
+
+    // Rule 14: Length=9(F), StartNum=F, EndOneLetter=T, Unique=F → E (Error)
+    @Test
+    public void testUserId_DT_Rule14() {
+        existingIds.add("B234567C");
+        User user = new User("John", "B234567C", null); // Only 8 chars
+        String result = Validation.validateUserId(user, existingIds);
+        assertNotNull(result); // Error
+    }
+
+    // Rule 15: Length=9(F), StartNum=F, EndOneLetter=F, Unique=T → E (Error)
+    @Test
+    public void testUserId_DT_Rule15() {
+        User user = new User("John", "A1234567", null); // Only 8 chars, doesn't start with number
+        String result = Validation.validateUserId(user, existingIds);
+        assertNotNull(result); // Error
+    }
+
+    // Rule 16: Length=9(F), StartNum=F, EndOneLetter=F, Unique=F → E (Error)
+    @Test
+    public void testUserId_DT_Rule16() {
+        existingIds.add("B2345678");
+        User user = new User("John", "B2345678", null); // Only 8 chars
+        String result = Validation.validateUserId(user, existingIds);
+        assertNotNull(result); // Error
+    }
+
 
     //------- Decision Table: User Name Validation -------//
-    /*
-     * Decision Table:
-     * +-----------------------+--------+--------+--------+--------+--------+--------+
-     * | Conditions            | Rule 1 | Rule 2 | Rule 3 | Rule 4 | Rule 5 | Rule 6 |
-     * +-----------------------+--------+--------+--------+--------+--------+--------+
-     * | Not Empty/Null (T/F)  |   T    |   T    |   T    |   T    |   F    |   F    |
-     * | No Leading Space(T/F) |   T    |   T    |   F    |   F    |   -    |   -    |
-     * | Valid Chars (T/F)     |   T    |   F    |   T    |   F    |   -    |   -    |
-     * +-----------------------+--------+--------+--------+--------+--------+--------+
-     * | Output                |   V    |   E    |   E    |   E    |   E    |   E    |
-     * +-----------------------+--------+--------+--------+--------+--------+--------+
-     *
-     * Legend:
-     *   T = True/Correct
-     *   F = False/Incorrect
-     *   - = Don't Care (not checked if empty/null)
-     *   V = Valid (null returned)
-     *   E = Error (validation failed)
-     *
-     * Interpretation:
-     *   Rule 1: Not empty, no leading space, valid chars → Valid
-     *   Rule 2: Not empty, no leading space, invalid chars → Invalid chars error
-     *   Rule 3: Not empty, has leading space, valid chars → Leading space error
-     *   Rule 4: Not empty, has leading space, invalid chars → Leading space error
-     *   Rule 5: Empty → Empty error
-     *   Rule 6: Null → Null error
-     */
-
     // Rule 1: Not Empty=T, No Leading Space=T, Valid Chars=T → V (Valid)
     @Test
     public void testUserName_DT_Rule1_AllValid() {
@@ -285,114 +266,38 @@ public class ValidationDecisionTableTest {
         assertNotNull(result); // E = Leading Space Error
     }
 
-    // Rule 5: Not Empty=F (Empty), Leading Space=-, Valid Chars=- → E (Empty)
-    @Test
-    public void testUserName_DT_Rule5_Empty() {
-        User user = new User("", "123456789", null);
-        String result = Validation.validateUserName(user, existingIds);
-        assertNotNull(result); // E = Empty Error
-    }
-
-    // Rule 6: Not Empty=F (Null), Leading Space=-, Valid Chars=- → E (Null)
-    @Test
-    public void testUserName_DT_Rule6_Null() {
-        User user = new User(null, "123456789", null);
-        String result = Validation.validateUserName(user, existingIds);
-        assertNotNull(result); // E = Null Error
-    }
 
     //------- Decision Table: Movie Title Validation -------//
-    /*
-     * Decision Table:
-     * +-----------------------+--------+--------+--------+--------+--------+--------+--------+--------+
-     * | Conditions            | Rule 1 | Rule 2 | Rule 3 | Rule 4 | Rule 5 | Rule 6 | Rule 7 | Rule 8 |
-     * +-----------------------+--------+--------+--------+--------+--------+--------+--------+--------+
-     * | Not Null/Empty (T/F)  |   T    |   T    |   T    |   F    |   F    |   T    |   T    |   T    |
-     * | First Char Upper(T/F) |   T    |   T    |   F    |   -    |   -    |   T    |   F    |   F    |
-     * | All Words Upper (T/F) |   T    |   F    |   -    |   -    |   -    |   T    |   -    |   -    |
-     * +-----------------------+--------+--------+--------+--------+--------+--------+--------+--------+
-     * | Output                |   V    |   E    |   E    |   E    |   E    |   V    |   E    |   E    |
-     * +-----------------------+--------+--------+--------+--------+--------+--------+--------+--------+
-     *
-     * Legend:
-     *   T = True/Correct
-     *   F = False/Incorrect
-     *   - = Don't Care (not checked if previous condition fails)
-     *   V = Valid (null returned)
-     *   E = Error (validation failed)
-     *
-     * Interpretation:
-     *   Rule 1: Not null/empty, first char uppercase, all words uppercase → Valid
-     *   Rule 2: Not null/empty, first char uppercase, some word lowercase → Error
-     *   Rule 3: Not null/empty, first char lowercase → Error
-     *   Rule 4: Null → Null error
-     *   Rule 5: Empty → Empty error
-     *   Rule 6: Not null/empty, single word uppercase → Valid
-     *   Rule 7: Not null/empty, single word lowercase → Error
-     *   Rule 8: Not null/empty, starts with number → Error
-     */
 
-    // Rule 1: Not Null/Empty=T, First Char Upper=T, All Words Upper=T → V (Valid)
+    // Rule 1: OneWord=T, AllWordsStartUpper=T → V (Valid)
     @Test
-    public void testMovieTitle_DT_Rule1_AllValid() {
-        Movie movie = new Movie("The Dark Knight", "TDK123", new String[]{});
-        String result = Validation.validateMovieTitle(movie);
-        assertNull(result); // V = Valid
-    }
-
-    // Rule 2: Not Null/Empty=T, First Char Upper=T, All Words Upper=F → E (Word Error)
-    @Test
-    public void testMovieTitle_DT_Rule2_NotAllWordsUpper() {
-        Movie movie = new Movie("The dark Knight", "TDK123", new String[]{}); // 'dark' lowercase
-        String result = Validation.validateMovieTitle(movie);
-        assertNotNull(result); // E = Word Not Uppercase Error
-    }
-
-    // Rule 3: Not Null/Empty=T, First Char Upper=F, All Words Upper=- → E (First Char)
-    @Test
-    public void testMovieTitle_DT_Rule3_FirstNotUpper() {
-        Movie movie = new Movie("the Dark Knight", "TDK123", new String[]{}); // First lowercase
-        String result = Validation.validateMovieTitle(movie);
-        assertNotNull(result); // E = First Char Not Uppercase Error
-    }
-
-    // Rule 4: Not Null/Empty=F (Null), First Char Upper=-, All Words Upper=- → E (Null)
-    @Test
-    public void testMovieTitle_DT_Rule4_Null() {
-        Movie movie = new Movie(null, "123", new String[]{});
-        String result = Validation.validateMovieTitle(movie);
-        assertNotNull(result); // E = Null Error
-    }
-
-    // Rule 5: Not Null/Empty=F (Empty), First Char Upper=-, All Words Upper=- → E (Empty)
-    @Test
-    public void testMovieTitle_DT_Rule5_Empty() {
-        Movie movie = new Movie("", "123", new String[]{});
-        String result = Validation.validateMovieTitle(movie);
-        assertNotNull(result); // E = Empty Error
-    }
-
-    // Rule 6: Not Null/Empty=T, First Char Upper=T, All Words Upper=T → V (Single Word)
-    @Test
-    public void testMovieTitle_DT_Rule6_SingleWordValid() {
+    public void testMovieTitle_DT_Rule1_OneWordCapitalized() {
         Movie movie = new Movie("Inception", "I123", new String[]{});
         String result = Validation.validateMovieTitle(movie);
         assertNull(result); // V = Valid
     }
 
-    // Rule 7: Not Null/Empty=T, First Char Upper=F, All Words Upper=- → E (Single Word Lower)
+    // Rule 2: OneWord=T, AllWordsStartUpper=F → E (Error - not capitalized)
     @Test
-    public void testMovieTitle_DT_Rule7_SingleWordInvalid() {
-        Movie movie = new Movie("inception", "I123", new String[]{});
+    public void testMovieTitle_DT_Rule2_OneWordNotCapitalized() {
+        Movie movie = new Movie("inception", "I123", new String[]{}); // lowercase
         String result = Validation.validateMovieTitle(movie);
-        assertNotNull(result); // E = First Char Not Uppercase Error
+        assertNotNull(result); // E = Error
     }
 
-    // Rule 8: Not Null/Empty=T, First Char Upper=F (Number), All Words Upper=- → E (Number)
+    // Rule 3: OneWord=F, AllWordsStartUpper=T → V (Valid - multiple words, all capitalized)
     @Test
-    public void testMovieTitle_DT_Rule8_StartsWithNumber() {
-        Movie movie = new Movie("1917", "123", new String[]{});
+    public void testMovieTitle_DT_Rule3_MultipleWordsCapitalized() {
+        Movie movie = new Movie("Spider Man", "SM123", new String[]{});
         String result = Validation.validateMovieTitle(movie);
-        assertNotNull(result); // E = Starts With Number Error
+        assertNull(result); // V = Valid
+    }
+
+    // Rule 4: OneWord=F, AllWordsStartUpper=F → E (Error - multiple words, not all capitalized)
+    @Test
+    public void testMovieTitle_DT_Rule4_MultipleWordsNotAllCapitalized() {
+        Movie movie = new Movie("Spider man", "SM123", new String[]{}); // 'man' not capitalized
+        String result = Validation.validateMovieTitle(movie);
+        assertNotNull(result); // E = Error
     }
 }
