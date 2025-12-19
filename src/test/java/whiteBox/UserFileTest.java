@@ -1,3 +1,6 @@
+package whiteBox;
+
+import core.*;
 import model.User;
 import org.junit.jupiter.api.*;
 import java.io.IOException;
@@ -55,9 +58,9 @@ public class UserFileTest {
         Path userFile = tempDir.resolve("users.txt");
         Files.writeString(userFile,
                 """
-                John Doe,111111111
-                TC379,I123
-                """);
+                        John Doe,111111111
+                        TC379,I123
+                        """);
 
         List<User> users = userParser.readUsers(userFile.toString());
 
@@ -82,9 +85,9 @@ public class UserFileTest {
         Files.writeString(userFile,
                 """
 
-                John Doe,111111111
-                TC379,I123
-                """);
+                        John Doe,111111111
+                        TC379,I123
+                        """);
 
         List<User> users = userParser.readUsers(userFile.toString());
 
@@ -108,21 +111,20 @@ public class UserFileTest {
         Exception exception = assertThrows(Exception.class, () -> {
             Files.writeString(userFile,
                     """
-                    JohnDoe/111111111
-                    TC379,I123
-                    """);
+                            JohnDoe/111111111
+                            TC379,I123
+                            """);
             userParser.readUsers(userFile.toString());
         });
 
         assertTrue(
                 exception.getMessage().toLowerCase().contains("format") ||
-                        exception.getMessage().toLowerCase().contains("wrong")
-        );
+                        exception.getMessage().toLowerCase().contains("wrong"));
     }
 
-            // ===================== BRANCH COVERAGE TEST CASES ===================== //
+    // ===================== BRANCH COVERAGE TEST CASES ===================== //
 
-            // Test cases 27,28,29 are redundant from the statement coverage //
+    // Test cases 27,28,29 are redundant from the statement coverage //
 
     /**
      * TC30 – Branch coverage: empty file
@@ -138,8 +140,7 @@ public class UserFileTest {
 
         assertTrue(users.isEmpty());
     }
-            // ===================== PATH COVERAGE TEST CASES ===================== //
-            // The path coverage test cases 56,57,58 are also redundant //
+    // ===================== PATH COVERAGE TEST CASES ===================== //
+    // The path coverage test cases 56,57,58 are also redundant //
 
 }
-

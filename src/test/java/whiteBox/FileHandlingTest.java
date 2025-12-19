@@ -1,3 +1,6 @@
+package whiteBox;
+
+import core.*;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
@@ -18,7 +21,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @DisplayName("FileHandling – readFile() Statement Coverage Tests")
 public class FileHandlingTest {
 
-            // ===================== STATEMENT COVERAGE TEST CASES =====================
+    // ===================== STATEMENT COVERAGE TEST CASES =====================
 
     private final FileHandler fileHandler = new FileHandler();
 
@@ -159,8 +162,9 @@ public class FileHandlingTest {
         assertEquals("John Smith,12345678A,No recommendations available", lines.get(0));
     }
 
-            // ===================== BRANCH COVERAGE TEST CASES =====================
-            // These test cases 49,50,51,52,53,54 are redundant from the statement coverage //
+    // ===================== BRANCH COVERAGE TEST CASES =====================
+    // These test cases 49,50,51,52,53,54 are redundant from the statement coverage
+    // //
 
     @Test
     @DisplayName("TC55 – writeFirstError: no errors")
@@ -176,9 +180,7 @@ public class FileHandlingTest {
         assertTrue(lines.isEmpty());
     }
 
-            // ===================== Path COVERAGE TEST CASES =====================
-            // These test cases 74,75 are redundant from the above coverage methods //
+    // ===================== Path COVERAGE TEST CASES =====================
+    // These test cases 74,75 are redundant from the above coverage methods //
 
 }
-
-

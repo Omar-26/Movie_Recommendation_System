@@ -1,3 +1,4 @@
+package core;
 
 import model.Movie;
 import model.User;
@@ -9,11 +10,6 @@ import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 import java.util.List;
 import java.util.Set;
-
-import core.FileHandler;
-import core.Recommendation;
-import core.UserFileParser;
-import core.Validation;
 
 public class Main {
     public static void main(String[] args) {

@@ -1,3 +1,5 @@
+package core;
+
 import model.Movie;
 import model.User;
 
@@ -5,7 +7,7 @@ import java.util.Set;
 
 public class Validation {
 
-    //------- Movie Validation Methods -------//
+    // ------- Movie Validation Methods -------//
 
     private static String validateMovieTitle(String title) {
         if (title == null || title.isEmpty()) {
@@ -48,7 +50,7 @@ public class Validation {
     // -------- FORMAT + UNIQUENESS --------
     public static String validateMovieId(Movie movie, Set<String> existingMovieIds) {
 
-        //  check format first
+        // check format first
         String error = validateMovieId(movie.title(), movie.id());
         if (error != null) {
             return error;
@@ -62,7 +64,7 @@ public class Validation {
             if (existingId.length() >= 3 &&
                     existingId.substring(existingId.length() - 3).equals(currentDigits)) {
 
-                return "ERROR: Movie Id numbers " + movie.id() + " aren’t unique";
+                return "ERROR: Movie Id numbers " + movie.id() + " aren't unique";
             }
         }
 
@@ -71,7 +73,8 @@ public class Validation {
 
     private static String extractCapitalLetters(String title) {
         StringBuilder sb = new StringBuilder();
-        if (title == null) return "";
+        if (title == null)
+            return "";
 
         for (char ch : title.toCharArray()) {
             if (Character.isUpperCase(ch)) {
@@ -81,7 +84,7 @@ public class Validation {
         return sb.toString();
     }
 
-    //------- User Validation Methods -------//
+    // ------- User Validation Methods -------//
 
     private static String validateUserName(String userName) {
         if (userName == null || userName.isEmpty())
@@ -109,7 +112,7 @@ public class Validation {
         return null;
     }
 
-    //------- Public APIs used by Tests -------//
+    // ------- Public APIs used by Tests -------//
 
     public static String validateMovieTitle(Movie movie) {
         return validateMovieTitle(movie.title());

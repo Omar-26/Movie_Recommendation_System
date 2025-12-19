@@ -1,3 +1,6 @@
+package whiteBox;
+
+import core.*;
 import model.Movie;
 import model.User;
 import org.junit.jupiter.api.BeforeEach;
@@ -16,9 +19,9 @@ public class ValidationFileTest {
     @BeforeEach
     void setUp() {
         existingIds = new HashSet<>();
-        existingIds.add("123456789");   // Example existing ID
+        existingIds.add("123456789"); // Example existing ID
     }
-            // ===================== STATEMENT COVERAGE TEST CASES =====================
+    // ===================== STATEMENT COVERAGE TEST CASES =====================
 
     /**
      * TC4: Title = "Good Movie"
@@ -27,7 +30,7 @@ public class ValidationFileTest {
     @Test
     @DisplayName("TC4 – Statement coverage: valid movie title")
     void testStatementCoverage_TC4_ValidTitle() {
-        Movie movie = new Movie("Good Movie", "123", new String[]{"Drama"});
+        Movie movie = new Movie("Good Movie", "123", new String[] { "Drama" });
 
         String result = Validation.validateMovieTitle(movie);
 
@@ -41,7 +44,7 @@ public class ValidationFileTest {
     @Test
     @DisplayName("TC5 – Statement coverage: null movie title")
     void testStatementCoverage_TC5_NullTitle() {
-        Movie movie = new Movie(null, "123", new String[]{"Drama"});
+        Movie movie = new Movie(null, "123", new String[] { "Drama" });
 
         String result = Validation.validateMovieTitle(movie);
 
@@ -55,7 +58,7 @@ public class ValidationFileTest {
     @Test
     @DisplayName("TC5 – Statement coverage: empty movie title")
     void testStatementCoverage_TC5_EmptyTitle() {
-        Movie movie = new Movie("", "123", new String[]{"Drama"});
+        Movie movie = new Movie("", "123", new String[] { "Drama" });
 
         String result = Validation.validateMovieTitle(movie);
 
@@ -69,7 +72,7 @@ public class ValidationFileTest {
     @Test
     @DisplayName("TC6 – Statement coverage: lowercase starting title")
     void testStatementCoverage_TC6_LowercaseStart() {
-        Movie movie = new Movie("goodMovie", "123", new String[]{"Drama"});
+        Movie movie = new Movie("goodMovie", "123", new String[] { "Drama" });
 
         String result = Validation.validateMovieTitle(movie);
 
@@ -79,7 +82,7 @@ public class ValidationFileTest {
     @Test
     @DisplayName("TC7 – Statement coverage: valid movie ID")
     void testStatementCoverage_TC7_ValidId() {
-        Movie movie = new Movie("Spider Man", "SM123", new String[]{});
+        Movie movie = new Movie("Spider Man", "SM123", new String[] {});
 
         String result = Validation.validateMovieId(movie);
 
@@ -89,7 +92,7 @@ public class ValidationFileTest {
     @Test
     @DisplayName("TC8 – Statement coverage: non-unique digits in movie ID")
     void testStatementCoverage_TC8_NonUniqueDigits() {
-        Movie movie = new Movie("Spider Man", "SM112", new String[]{});
+        Movie movie = new Movie("Spider Man", "SM112", new String[] {});
 
         String result = Validation.validateMovieId(movie);
 
@@ -99,7 +102,7 @@ public class ValidationFileTest {
     @Test
     @DisplayName("TC9 – Statement coverage: wrong prefix letters")
     void testStatementCoverage_TC9_WrongPrefix() {
-        Movie movie = new Movie("Spider Man", "SP123", new String[]{});
+        Movie movie = new Movie("Spider Man", "SP123", new String[] {});
 
         String result = Validation.validateMovieId(movie);
 
@@ -109,7 +112,7 @@ public class ValidationFileTest {
     @Test
     @DisplayName("TC10 – Statement coverage: suffix not 3 digits")
     void testStatementCoverage_TC10_SuffixNotThreeDigits() {
-        Movie movie = new Movie("Spider Man", "SM12", new String[]{});
+        Movie movie = new Movie("Spider Man", "SM12", new String[] {});
 
         String result = Validation.validateMovieId(movie);
 
@@ -186,7 +189,6 @@ public class ValidationFileTest {
         assertNull(result);
     }
 
-
     /**
      * TC15: userId = null
      * Statement coverage → 2/7
@@ -260,12 +262,11 @@ public class ValidationFileTest {
         assertNull(result);
     }
 
-            // ===================== BRANCH COVERAGE TEST CASES =====================
-            // the test cases 31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48
-            // are redundant from the statement coverage //
+    // ===================== BRANCH COVERAGE TEST CASES =====================
+    // the test cases 31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48
+    // are redundant from the statement coverage //
 
-
-            // ===================== PATH COVERAGE TEST CASES =====================
-            // the test cases 59,60,61,62,63,64,65,66,67,68,69,70,71,72,73
-            // are redundant from the above coverage methods //
+    // ===================== PATH COVERAGE TEST CASES =====================
+    // the test cases 59,60,61,62,63,64,65,66,67,68,69,70,71,72,73
+    // are redundant from the above coverage methods //
 }

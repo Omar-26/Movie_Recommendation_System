@@ -1,12 +1,15 @@
+package unit;
+
 // ===================== Abdulrahman Ahmed Saeed =====================
 // =====================        2100811          =====================
 
+import core.*;
 import org.junit.jupiter.api.*;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
-import static org.junit.jupiter.api. Assertions.*;
+import static org.junit.jupiter.api.Assertions.*;
 import model.User;
 
 @DisplayName("User File Parser Tests")
@@ -34,7 +37,7 @@ public class UserFileParserTest {
                         try {
                             Files.deleteIfExists(path);
                         } catch (IOException e) {
-                            e. printStackTrace();
+                            e.printStackTrace();
                         }
                     });
         }
@@ -48,16 +51,16 @@ public class UserFileParserTest {
         Path userFile = tempDir.resolve("users.txt");
         Files.writeString(userFile,
                 """
-                John,111111111
-                TC379
-                """);
+                        John,111111111
+                        TC379
+                        """);
 
-        List<User> users = userParser. readUsers(userFile.toString());
+        List<User> users = userParser.readUsers(userFile.toString());
 
         assertEquals(1, users.size());
-        assertEquals("John", users.get(0). name());
-        assertEquals("111111111", users.get(0). id());
-        assertNotNull(users.get(0). watchedMovies());
+        assertEquals("John", users.get(0).name());
+        assertEquals("111111111", users.get(0).id());
+        assertNotNull(users.get(0).watchedMovies());
         assertTrue(users.get(0).watchedMovies().contains("TC379"));
     }
 
@@ -67,11 +70,11 @@ public class UserFileParserTest {
         Path userFile = tempDir.resolve("users.txt");
         Files.writeString(userFile,
                 """
-                John Doe,111111111
-                TC379
-                """);
+                        John Doe,111111111
+                        TC379
+                        """);
 
-        List<User> users = userParser. readUsers(userFile.toString());
+        List<User> users = userParser.readUsers(userFile.toString());
 
         assertEquals(1, users.size());
         assertEquals("John Doe", users.get(0).name());
@@ -85,24 +88,24 @@ public class UserFileParserTest {
         Path userFile = tempDir.resolve("users.txt");
         Files.writeString(userFile,
                 """
-                John Doe,111111111
-                TC379
-                
-                Jane Smith,222222222
-                I123
-                
-                Valid User,333333333
-                SP123
-                """);
+                        John Doe,111111111
+                        TC379
+
+                        Jane Smith,222222222
+                        I123
+
+                        Valid User,333333333
+                        SP123
+                        """);
 
         List<User> users = userParser.readUsers(userFile.toString());
 
         assertEquals(3, users.size());
         assertEquals("John Doe", users.get(0).name());
         assertEquals("Jane Smith", users.get(1).name());
-        assertEquals("Valid User", users. get(2).name());
+        assertEquals("Valid User", users.get(2).name());
         assertTrue(users.get(0).watchedMovies().contains("TC379"));
-        assertTrue(users.get(1).watchedMovies(). contains("I123"));
+        assertTrue(users.get(1).watchedMovies().contains("I123"));
         assertTrue(users.get(2).watchedMovies().contains("SP123"));
     }
 
@@ -112,9 +115,9 @@ public class UserFileParserTest {
         Path userFile = tempDir.resolve("users.txt");
         Files.writeString(userFile,
                 """
-                Valid User,333333333
-                SP123
-                """);
+                        Valid User,333333333
+                        SP123
+                        """);
 
         List<User> users = userParser.readUsers(userFile.toString());
 
@@ -128,11 +131,11 @@ public class UserFileParserTest {
         Path userFile = tempDir.resolve("users.txt");
         Files.writeString(userFile,
                 """
-                Valid User,123456789A
-                SP123
-                """);
+                        Valid User,123456789A
+                        SP123
+                        """);
 
-        List<User> users = userParser.readUsers(userFile. toString());
+        List<User> users = userParser.readUsers(userFile.toString());
 
         assertEquals(1, users.size());
         assertEquals("123456789A", users.get(0).id());
@@ -142,16 +145,16 @@ public class UserFileParserTest {
     @DisplayName("Test reading user with multiple watched movies")
     public void testReadUsers_MultipleWatchedMovies() throws Exception {
         Path userFile = tempDir.resolve("users.txt");
-        Files. writeString(userFile,
+        Files.writeString(userFile,
                 """
-                John Doe,111111111
-                TC379, I123, SP123
-                """);
+                        John Doe,111111111
+                        TC379, I123, SP123
+                        """);
 
         List<User> users = userParser.readUsers(userFile.toString());
 
         assertEquals(1, users.size());
-        assertEquals(3, users.get(0). watchedMovies().size());
+        assertEquals(3, users.get(0).watchedMovies().size());
         assertTrue(users.get(0).watchedMovies().contains("TC379"));
         assertTrue(users.get(0).watchedMovies().contains("I123"));
         assertTrue(users.get(0).watchedMovies().contains("SP123"));
@@ -163,17 +166,17 @@ public class UserFileParserTest {
         Path userFile = tempDir.resolve("users.txt");
         Files.writeString(userFile,
                 """
-                 John Doe,111111111
-                TC379
-                """);
+                         John Doe,111111111
+                        TC379
+                        """);
 
-        List<User> users = userParser. readUsers(userFile.toString());
+        List<User> users = userParser.readUsers(userFile.toString());
 
-        assertEquals(1, users. size());
+        assertEquals(1, users.size());
         assertEquals(" John Doe", users.get(0).name());
         assertTrue(users.get(0).name().startsWith(" "),
                 "Name should start with a space to allow validation");
-        assertEquals("111111111", users. get(0).id());
+        assertEquals("111111111", users.get(0).id());
         assertTrue(users.get(0).watchedMovies().contains("TC379"));
     }
 
@@ -209,7 +212,7 @@ public class UserFileParserTest {
         Path userFile = tempDir.resolve("users. txt");
         Files.writeString(userFile, "   \n  \n    \n");
 
-        List<User> users = userParser. readUsers(userFile.toString());
+        List<User> users = userParser.readUsers(userFile.toString());
 
         assertEquals(0, users.size());
         assertTrue(users.isEmpty());
@@ -220,7 +223,7 @@ public class UserFileParserTest {
     @Test
     @DisplayName("Test missing movie ID line for single user")
     public void testReadUsers_MissingMovieIdLine() throws Exception {
-        Path userFile = tempDir. resolve("users.txt");
+        Path userFile = tempDir.resolve("users.txt");
         Files.writeString(userFile,
                 "John Doe,111111111\n");
 
@@ -239,18 +242,18 @@ public class UserFileParserTest {
         Path userFile = tempDir.resolve("users.txt");
         Files.writeString(userFile,
                 """
-                John Doe,111111111
-                TC379
-                
-                Jane Smith,222222222
-                """);
+                        John Doe,111111111
+                        TC379
+
+                        Jane Smith,222222222
+                        """);
 
         Exception exception = assertThrows(Exception.class, () -> {
-            userParser. readUsers(userFile.toString());
+            userParser.readUsers(userFile.toString());
         });
 
         assertTrue(exception.getMessage().contains("Movie") ||
-                exception. getMessage().contains("missing") ||
+                exception.getMessage().contains("missing") ||
                 exception.getMessage().contains("Jane Smith"));
     }
 
@@ -262,9 +265,9 @@ public class UserFileParserTest {
         Path userFile = tempDir.resolve("users. txt");
         Files.writeString(userFile,
                 """
-                John Doe 111111111
-                TC379
-                """);
+                        John Doe 111111111
+                        TC379
+                        """);
 
         Exception exception = assertThrows(Exception.class, () -> {
             userParser.readUsers(userFile.toString());
@@ -272,7 +275,7 @@ public class UserFileParserTest {
 
         assertTrue(exception.getMessage().contains("Wrong") ||
                 exception.getMessage().contains("format") ||
-                exception. getMessage().contains("John Doe 111111111"));
+                exception.getMessage().contains("John Doe 111111111"));
     }
 
     @Test
@@ -281,15 +284,15 @@ public class UserFileParserTest {
         Path userFile = tempDir.resolve("users.txt");
         Files.writeString(userFile,
                 """
-                John,Doe,111111111
-                TC379
-                """);
+                        John,Doe,111111111
+                        TC379
+                        """);
 
         Exception exception = assertThrows(Exception.class, () -> {
             userParser.readUsers(userFile.toString());
         });
 
-        assertTrue(exception. getMessage().contains("Wrong") ||
+        assertTrue(exception.getMessage().contains("Wrong") ||
                 exception.getMessage().contains("format"));
     }
 
@@ -299,9 +302,9 @@ public class UserFileParserTest {
         Path userFile = tempDir.resolve("users.txt");
         Files.writeString(userFile,
                 """
-                John Doe,111111111
-                
-                """);
+                        John Doe,111111111
+
+                        """);
 
         List<User> users = userParser.readUsers(userFile.toString());
         assertEquals(1, users.size());

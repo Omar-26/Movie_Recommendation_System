@@ -1,3 +1,6 @@
+package unit;
+
+import core.*;
 import model.Movie;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
@@ -36,7 +39,7 @@ public class ParserTest {
         assertEquals(1, movies.size());
         assertEquals("The Dark Knight", movies.getFirst().title());
         assertEquals("TDK123", movies.getFirst().id());
-        assertArrayEquals(new String[]{"Action", "Drama", "Thriller"}, movies.getFirst().genres());
+        assertArrayEquals(new String[] { "Action", "Drama", "Thriller" }, movies.getFirst().genres());
     }
 
     @Test
@@ -60,7 +63,7 @@ public class ParserTest {
         // Verify first movie
         assertEquals("The Dark Knight", movies.getFirst().title());
         assertEquals("TDK123", movies.get(0).id());
-        assertArrayEquals(new String[]{"Action", "Drama", "Thriller"}, movies.get(0).genres());
+        assertArrayEquals(new String[] { "Action", "Drama", "Thriller" }, movies.get(0).genres());
 
         // Verify second movie
         assertEquals("Inception", movies.get(1).title());
@@ -77,14 +80,14 @@ public class ParserTest {
         Path movieFile = tempDir.resolve("movies.txt");
         Files.writeString(movieFile,
                 """
-                        
+
                         The Dark Knight, TDK123
                         Action, Drama, Thriller
-                        
-                        
+
+
                         Inception, I456
                         Sci-Fi, Thriller
-                        
+
                         """);
 
         List<Movie> movies = movieParser.readMovies(movieFile.toString());
@@ -109,7 +112,7 @@ public class ParserTest {
         assertEquals(1, movies.size());
         assertEquals("The Dark Knight", movies.getFirst().title());
         assertEquals("TDK123", movies.getFirst().id());
-        assertArrayEquals(new String[]{"Action", "Drama", "Thriller"}, movies.getFirst().genres());
+        assertArrayEquals(new String[] { "Action", "Drama", "Thriller" }, movies.getFirst().genres());
     }
 
     @Test
@@ -125,7 +128,7 @@ public class ParserTest {
         List<Movie> movies = movieParser.readMovies(movieFile.toString());
 
         assertEquals(1, movies.size());
-        assertArrayEquals(new String[]{"Action"}, movies.getFirst().genres());
+        assertArrayEquals(new String[] { "Action" }, movies.getFirst().genres());
     }
 
     @Test
@@ -141,7 +144,7 @@ public class ParserTest {
         List<Movie> movies = movieParser.readMovies(movieFile.toString());
 
         assertEquals(1, movies.size());
-        assertArrayEquals(new String[]{"Action", "Adventure", "Crime", "Drama", "Thriller"},
+        assertArrayEquals(new String[] { "Action", "Adventure", "Crime", "Drama", "Thriller" },
                 movies.getFirst().genres());
     }
 
@@ -364,7 +367,7 @@ public class ParserTest {
         Files.writeString(movieFile,
                 """
                         The Dark Knight, TDK123
-                        
+
                         """);
 
         List<Movie> movies = movieParser.readMovies(movieFile.toString());
@@ -382,12 +385,12 @@ public class ParserTest {
                 """
                         The Dark Knight, TDK123
                         Action, Drama, Thriller
-                        
+
                         Inception, I456
                         Sci-Fi
                         The Matrix, TM789
                         Action, Sci-Fi, Thriller
-                        
+
                         Pulp Fiction, PF012
                         Crime, Drama
                         """);
