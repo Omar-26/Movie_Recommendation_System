@@ -1,3 +1,5 @@
+package unit;
+
 import logic.MovieFileParser;
 import model.Movie;
 import org.junit.jupiter.api.Test;

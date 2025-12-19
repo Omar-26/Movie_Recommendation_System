@@ -1,3 +1,5 @@
+package whiteBox;
+
 import logic.UserFileParser;
 import model.User;
 import org.junit.jupiter.api.*;

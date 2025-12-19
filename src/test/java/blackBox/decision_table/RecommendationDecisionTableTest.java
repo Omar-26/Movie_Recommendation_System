@@ -1,3 +1,5 @@
+package blackBox.decision_table;
+
 import logic.Recommendation;
 import model.Movie;
 import org.junit.jupiter.api.BeforeEach;

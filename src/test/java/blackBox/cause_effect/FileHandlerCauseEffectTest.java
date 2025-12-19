@@ -1,3 +1,5 @@
+package blackBox.cause_effect;
+
 import logic.FileHandler;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;

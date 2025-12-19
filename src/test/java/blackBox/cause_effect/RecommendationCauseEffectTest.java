@@ -1,3 +1,5 @@
+package blackBox.cause_effect;
+
 import logic.Recommendation;
 import model.Movie;
 import org.junit.jupiter.api.BeforeEach;

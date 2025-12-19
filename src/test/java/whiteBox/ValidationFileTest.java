@@ -1,3 +1,5 @@
+package whiteBox;
+
 import logic.Validation;
 import model.Movie;
 import model.User;

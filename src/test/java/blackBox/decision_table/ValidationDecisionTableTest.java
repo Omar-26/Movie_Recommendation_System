@@ -1,3 +1,5 @@
+package blackBox.decision_table;
+
 import logic.Validation;
 import model.Movie;
 import model.User;

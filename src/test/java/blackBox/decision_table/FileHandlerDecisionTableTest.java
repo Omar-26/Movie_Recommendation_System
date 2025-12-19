@@ -1,3 +1,5 @@
+package blackBox.decision_table;
+
 import logic.FileHandler;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;

@@ -1,3 +1,5 @@
+package blackBox.cause_effect;
+
 import logic.Validation;
 import model.Movie;
 import model.User;
