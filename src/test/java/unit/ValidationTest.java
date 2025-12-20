@@ -1,3 +1,6 @@
+package unit;
+
+import logic.Validation;
 import model.User;
 import model.Movie;
 import org.junit.jupiter.api.Assertions;

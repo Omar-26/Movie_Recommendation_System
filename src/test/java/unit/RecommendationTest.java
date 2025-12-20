@@ -1,3 +1,6 @@
+package unit;
+
+import logic.Recommendation;
 import model.Movie;
 import model.User;
 import org.junit.jupiter.api.BeforeAll;
